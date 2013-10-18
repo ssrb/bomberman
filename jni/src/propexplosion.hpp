@@ -36,8 +36,7 @@ namespace arsenal {
 			int _timeout;
 			int _stage;
 			Propagation _propagation;
-			static void InitializeGraphicRessources(SDL_Renderer *iRenderer);
-			static std::shared_ptr<SDL_Texture> _Explosion[4];
+			std::shared_ptr<SDL_Texture> _explosion[4];
 	};
 }
 }

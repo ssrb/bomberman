@@ -27,14 +27,8 @@ namespace arsenal {
 		explosion->_stage = 0;
 		explosion->zlevel = 2;
 		explosion->_orientation = orientation;
+		//_Explosion = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/flare.png"), SDL_DestroyTexture);
 		return explosion;
-	}
-
-	std::shared_ptr<SDL_Texture>  Explosion::_Explosion;
-
-	void Explosion::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	{
-		_Explosion = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/flare.png"), SDL_DestroyTexture);
 	}
 
 	void Explosion::Evolve(const std::vector<InputState>& /*iInputs*/, Uint32 iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const
@@ -101,11 +95,6 @@ namespace arsenal {
 
 	void Explosion::Render(SDL_Renderer *iRenderer) const 
 	{
-		if (!_Explosion) 
-		{
-			InitializeGraphicRessources(iRenderer);
-		}
-
 		using namespace bomberman::constants;
 
 		SDL_Rect srcRect;
@@ -120,7 +109,7 @@ namespace arsenal {
 		r.x = x * TILE_WIDTH + MAP_X;
 		r.y = y * TILE_WIDTH + MAP_Y;
 		
-		SDL_RenderCopy(iRenderer, _Explosion.get(), &srcRect, &r);
+		SDL_RenderCopy(iRenderer, _explosion.get(), &srcRect, &r);
 	}
 
 }

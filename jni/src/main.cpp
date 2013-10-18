@@ -18,6 +18,9 @@
 #include "setupscene.hpp"
 #include "fadescene.hpp"
 #include "victoryscene.hpp"
+#include "resourcemanager.hpp"
+
+using bomberman::resources::ResourceManager;
 
 void PollEvents(std::vector<InputState> &oInputState);
 
@@ -139,25 +142,25 @@ void game()
 		int p4 = vm.count("p4");
 
 		players[0].name = "Athos";
-		players[0].spriteName = "test/SaturnBomberman-BlackBomberman.PNG";
+		players[0].spriteName = "drawable/SaturnBomberman-BlackBomberman.PNG";
 		players[0].present = p1 ? true : false;
 		players[0].isComputer = p1 ? true : false;
 		players[0].aiScript =  p1 ? vm["p1"].as<std::string>() : "";
 
 		players[1].name = "Porthos";
-		players[1].spriteName = "test/honey.png";
+		players[1].spriteName = "drawable/honey.png";
 		players[1].present = p2 ? true : false;
 		players[1].isComputer = p2 ? true : false;
 		players[1].aiScript = p2 ? vm["p2"].as<std::string>() : "";
 
 		players[2].name = "Aramis";
-		players[2].spriteName = "test/manji.png";
+		players[2].spriteName = "drawable/manji.png";
 		players[2].present = p3 ? true : false;
 		players[2].isComputer = p3 ? true : false;
 		players[2].aiScript = p3 ? vm["p3"].as<std::string>() : "";
 
 		players[3].name = "D'Artagnan";
-		players[3].spriteName = "test/whitebbman.png";
+		players[3].spriteName = "drawable/whitebbman.png";
 		players[3].present = p4 ? true : false;
 		players[3].isComputer = p4 ? true : false;
 		players[3].aiScript = p4 ? vm["p4"].as<std::string>() : "";
@@ -265,6 +268,10 @@ int main(int argc, char** argv)
 	keyMap[SDLK_3] = InputState::L2;
 	keyMap[SDLK_2] = InputState::R1;
 	keyMap[SDLK_4] = InputState::R2;
+	keyMap[SDLK_j] = InputState::L1;
+	keyMap[SDLK_k] = InputState::L2;
+	keyMap[SDLK_l] = InputState::R1;
+	keyMap[SDLK_m] = InputState::R2;
 	keyMap[SDLK_SPACE] = InputState::START;
 #endif
 
@@ -303,6 +310,8 @@ int main(int argc, char** argv)
 	printlog("Beginning game with window=%p\n", window);
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+	ResourceManager::Initialize(renderer);
 
 	try
 	{	

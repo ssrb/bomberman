@@ -2,6 +2,7 @@
 
 namespace bomberman {
 namespace bestiary {
+
 	ComputerPtr Computer::Create(PlayerId id, const std::string &iName, const std::string &iSpriteName, const std::string &iAiScript, int iInputStateIdx, SDL_Renderer* iRenderer)
 	{
 		SDL_RWops *rw = SDL_RWFromFile(iAiScript.c_str(), "r");
@@ -28,7 +29,6 @@ namespace bestiary {
 		player->_nbProBomb = 0;
 		player->_availableBombs = 1;
 		player->_bombStrength = 2;
-		player->InitializeGraphicRessources(iRenderer);
 
 		delete[] script;
 

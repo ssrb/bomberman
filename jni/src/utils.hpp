@@ -10,10 +10,7 @@
 namespace bomberman {
 namespace utils {
 	SDL_Rect GetSafeArea1920();
-	std::shared_ptr<SDL_Texture> LoadTexture(SDL_Renderer* renderer, std::string filename);
 	std::shared_ptr<SDL_Texture> LoadTexture(SDL_Renderer* renderer, SDL_Surface* surface);
-
-	std::shared_ptr<TTF_Font> LoadFont(std::string fontName, int ptSize);
 	std::shared_ptr<SDL_Texture> DrawString(SDL_Renderer* renderer, std::shared_ptr<TTF_Font> font, std::string text, SDL_Color fg);
 
 	SDL_Color MakeColor(Uint32 color);

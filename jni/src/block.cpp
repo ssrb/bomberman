@@ -1,8 +1,11 @@
 #include "block.hpp"
 #include "constants.hpp"
+#include "resourcemanager.hpp"
 
 // SDL
 #include <SDL_image.h>
+
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace architecture {
@@ -12,14 +15,8 @@ namespace architecture {
 		auto block = std::make_shared<Block>();
 		block->zlevel = 2;
 		block->elevel = constants::BLOCK_ELEVEL;
+		block->_block = ResourceManager::GetSingleton()->GetTexture("drawable/block.png");
 		return block;
-	}
-
-	std::shared_ptr<SDL_Texture> Block::_Block;
-
-	void Block::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	{
-		_Block = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/block.png"), SDL_DestroyTexture);
 	}
 
 	void Block::Evolve(const std::vector<InputState>& /*iInputs*/, uint32_t /*iTimestamp*/, const MapConstPtr &/*iPresentMap*/, const MapPtr &iFutureMap) const
@@ -29,20 +26,15 @@ namespace architecture {
 
 	void Block::Render(SDL_Renderer *iRenderer) const 
 	{
-		if (!_Block)
-		{
-			InitializeGraphicRessources(iRenderer);
-		}
-
 		using namespace bomberman::constants;
 		
 		SDL_Rect r;
 		r.w = TILE_WIDTH;
 		r.h = TILE_HEIGHT;
-		r.x = x * TILE_WIDTH + MAP_X;	// <- just for overscan
+		r.x = x * TILE_WIDTH + MAP_X;
 		r.y = y * TILE_WIDTH + MAP_Y;
 		
-		SDL_RenderCopy(iRenderer, _Block.get(), nullptr, &r);
+		SDL_RenderCopy(iRenderer, _block.get(), nullptr, &r);
 	}
 }
 }

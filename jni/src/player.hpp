@@ -59,10 +59,9 @@ namespace bestiary {
 
 			int GetFrameIndex() const;
 
-			void InitializeGraphicRessources(SDL_Renderer *iRenderer);
-			std::shared_ptr<SDL_Texture> _Bomberman;
+			std::shared_ptr<SDL_Texture> _bomberman;
+			std::shared_ptr<Mix_Chunk> _bombPlaceSound;
 
-			static std::shared_ptr<Mix_Chunk> _bombPlaceSound;
 			static State DynamicToStaticState(State iState);
 
 			void EvolutionRoutine(const PlayerPtr &player, const std::vector<InputState>& iInputs, Uint32 iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const;

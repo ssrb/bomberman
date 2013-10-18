@@ -60,8 +60,6 @@ namespace bestiary {
 		}
 	}
 
-	std::shared_ptr<Mix_Chunk> Player::_bombPlaceSound;
-
 	PlayerPtr Player::Create(PlayerId id, const std::string &iName, const std::string &iSpriteName, int iInputStateIdx, SDL_Renderer* iRenderer)
 	{
 		auto player = std::make_shared<Player>();
@@ -74,36 +72,35 @@ namespace bestiary {
 		player->_nextUpdateDueTime = 0;
 		player->_state = IdleDown;
 		player->_inputStateIdx = iInputStateIdx;
-		player->InitializeGraphicRessources(iRenderer);
 		player->_nbProBomb = 0;
 		player->_availableBombs = 1;
 		player->_bombStrength = 2;
 		return player;
 	}
 
-	void Player::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	{
-		auto surface = IMG_Load(_spriteName.c_str());
-		SDL_SetColorKey(surface, SDL_TRUE, 0x00ff00);
-		_Bomberman = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(iRenderer, surface), SDL_DestroyTexture);
-		SDL_FreeSurface(surface);
+	// void Player::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
+	// {
+	// 	auto surface = IMG_Load(_spriteName.c_str());
+	// 	SDL_SetColorKey(surface, SDL_TRUE, 0x00ff00);
+	// 	_Bomberman = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(iRenderer, surface), SDL_DestroyTexture);
+	// 	SDL_FreeSurface(surface);
 
-		if (!_bombPlaceSound)
-		{
-			_bombPlaceSound = std::shared_ptr<Mix_Chunk>(Mix_LoadWAV("sound/bombplace.wav"), Mix_FreeChunk);
-			if (!_bombPlaceSound)
-			{
-				printlog("Mix_LoadWAV: %s\n", Mix_GetError());
-			}
-		}
-	}
+	// 	if (!_bombPlaceSound)
+	// 	{
+	// 		_bombPlaceSound = std::shared_ptr<Mix_Chunk>(Mix_LoadWAV("sound/bombplace.wav"), Mix_FreeChunk);
+	// 		if (!_bombPlaceSound)
+	// 		{
+	// 			printlog("Mix_LoadWAV: %s\n", Mix_GetError());
+	// 		}
+	// 	}
+	// }
 	
 	void Player::EvolutionRoutine(const PlayerPtr &player, const std::vector<InputState>& iInputs, uint32_t iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const
 	{
 		auto umpire = std::static_pointer_cast<Umpire>(iFutureMap->GetEntity(constants::UMPIRE));
 		if (_state == Dying)
 		{
-			auto corpse = Corpse::Create(this->_Bomberman);
+			auto corpse = Corpse::Create(_bomberman);
 			corpse->x = this->x;
 			corpse->y = this->y;
 			corpse->mx = this->mx;
@@ -300,7 +297,7 @@ namespace bestiary {
 			src[i].y = 1;
 		}
 
-		SDL_RenderCopy(iRenderer, _Bomberman.get(), &src[idx], &dst);
+		SDL_RenderCopy(iRenderer, _bomberman.get(), &src[idx], &dst);
 	}
 
 	void Player::Kill()

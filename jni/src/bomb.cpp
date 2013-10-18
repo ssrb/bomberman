@@ -5,12 +5,14 @@
 #include "block.hpp"
 #include "printlog.hpp"
 #include "umpire.hpp"
+#include "resourcemanager.hpp"
 
 #include <boost/foreach.hpp>
 #include <SDL_image.h>
 
 using bomberman::architecture::Block;
 using bomberman::architecture::SoftBlock;
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace arsenal {
@@ -58,27 +60,9 @@ namespace arsenal {
 		bomb->_frameId = 0;
 		bomb->_nextFrameDueTime = 0;
 		bomb->_playerId = iPlayerId;
+		bomb->_bomb = ResourceManager::GetSingleton()->GetTexture("test/bomb.png");
+		bomb->_explosionSound = ResourceManager::GetSingleton()->GetMixChunk("sound/explosion.wav");
 		return bomb;
-	}
-
-	std::shared_ptr<SDL_Texture>  Bomb::_Bomb;
-	std::shared_ptr<Mix_Chunk> Bomb::_explosionSound;
-
-	void Bomb::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	{
-		if (!_Bomb)
-		{
-			_Bomb = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/bomb.png"), SDL_DestroyTexture);
-		}
-		
-		if (!_explosionSound)
-		{
-			_explosionSound = std::shared_ptr<Mix_Chunk>(Mix_LoadWAV("sound/explosion.wav"), Mix_FreeChunk);
-			if (!_explosionSound)
-			{
-				printlog("Mix_LoadWAV: %s\n", Mix_GetError());
-			}
-		}
 	}
 
 	void Bomb::Evolve(const std::vector<InputState>& /*iInputs*/, uint32_t iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const
@@ -126,11 +110,6 @@ namespace arsenal {
 
 	void Bomb::Render(SDL_Renderer *iRenderer) const 
 	{
-		if (!_Bomb) 
-		{
-			InitializeGraphicRessources(iRenderer);
-		}
-
 		using namespace bomberman::constants;
 		
 		SDL_Rect sourceRect;
@@ -145,7 +124,7 @@ namespace arsenal {
 		r.x = x * TILE_WIDTH + mx * SUBTILE_WIDTH + MAP_X;
 		r.y = y * TILE_WIDTH + my * SUBTILE_WIDTH + MAP_Y;
 
-		SDL_RenderCopy(iRenderer, _Bomb.get(), &sourceRect, &r);
+		SDL_RenderCopy(iRenderer, _bomb.get(), &sourceRect, &r);
 	}
 
 	void Bomb::Detonate()

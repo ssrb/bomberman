@@ -17,24 +17,10 @@ namespace utils {
 		return rect;
 	}
 	
-	std::shared_ptr<SDL_Texture> LoadTexture(SDL_Renderer* renderer, std::string filename)
-	{
-		auto surface = IMG_Load(filename.c_str());
-		auto result = LoadTexture(renderer, surface);
-		SDL_FreeSurface(surface);
-		return result;
-	}
-
 	std::shared_ptr<SDL_Texture> LoadTexture(SDL_Renderer* renderer, SDL_Surface* surface)
 	{
 		auto result = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(renderer, surface), SDL_DestroyTexture);
 		return result;
-	}
-
-	std::shared_ptr<TTF_Font> LoadFont(std::string fontName, int ptSize)
-	{
-		std::shared_ptr<TTF_Font> font(TTF_OpenFont(fontName.c_str(), ptSize), TTF_CloseFont);
-		return font;
 	}
 
 	std::shared_ptr<SDL_Texture> DrawString(SDL_Renderer* renderer, std::shared_ptr<TTF_Font> font, std::string text, SDL_Color fg)

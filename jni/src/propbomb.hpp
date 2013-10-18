@@ -28,8 +28,7 @@ namespace arsenal {
 			PlayerId _playerId;
 			bool _detonating;
 			int _strength; // In megaton
-			static void InitializeGraphicRessources(SDL_Renderer *iRenderer);
-			static std::shared_ptr<SDL_Texture> _Bomb;
+			std::shared_ptr<SDL_Texture> _bomb;
 	};
 }
 }

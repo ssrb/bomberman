@@ -17,14 +17,8 @@ namespace architecture {
 		block->elevel = constants::SOFTBLOCK_ELEVEL;
 		block->isAlive = true;
 		block->_bonusProbability = iBonusProbability;
+		//_SoftBlock = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/softblock.png"), SDL_DestroyTexture);
 		return block;
-	}
-
-	std::shared_ptr<SDL_Texture> SoftBlock::_SoftBlock;
-
-	void SoftBlock::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	{
-		_SoftBlock = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/softblock.png"), SDL_DestroyTexture);
 	}
 
 	void SoftBlock::Evolve(const std::vector<InputState>& /*iInputs*/, uint32_t /*iTimestamp*/, const MapConstPtr &/*iPresentMap*/, const MapPtr &iFutureMap) const
@@ -46,11 +40,6 @@ namespace architecture {
 
 	void SoftBlock::Render(SDL_Renderer *iRenderer) const 
 	{
-		if (!_SoftBlock)
-		{
-			InitializeGraphicRessources(iRenderer);
-		}
-
 		using namespace bomberman::constants;
 		
 		SDL_Rect r;
@@ -59,7 +48,7 @@ namespace architecture {
 		r.x = x * TILE_WIDTH + MAP_X;	// <- just for overscan
 		r.y = y * TILE_WIDTH + MAP_Y;
 		
-		SDL_RenderCopy(iRenderer, _SoftBlock.get(), nullptr, &r);
+		SDL_RenderCopy(iRenderer, _softBlock.get(), nullptr, &r);
 	}
 
 	void SoftBlock::Kill()

@@ -1,8 +1,11 @@
 #include "setupscene.hpp"
 #include "constants.hpp"
 #include "utils.hpp"
+#include "resourcemanager.hpp"
 
 #include <algorithm>
+
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 
@@ -15,8 +18,8 @@ void SetupScene::Init(SDL_Window* window, SDL_Renderer* renderer)
 
 	_selectionTwink = std::shared_ptr<Mix_Chunk>(Mix_LoadWAV("sound/select.wav"), Mix_FreeChunk);
 
-	_background = utils::LoadTexture(renderer, "drawable/setupback.png");
-	_playerReady =  utils::LoadTexture(renderer, "drawable/playerstatus.png");
+	_background = ResourceManager::GetSingleton()->GetTexture("drawable/setupback.png");
+	_playerReady =  ResourceManager::GetSingleton()->GetTexture("drawable/playerstatus.png");
 	
 	for (int i=0;i<4;i++)
 	{

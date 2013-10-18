@@ -11,6 +11,7 @@
 #include "printlog.hpp"
 #include "computer.hpp"
 #include "umpire.hpp"
+#include "resourcemanager.hpp"
 
 //SDL
 #include <SDL_image.h>
@@ -26,6 +27,7 @@ using bomberman::arsenal::Bomb;
 using bomberman::arsenal::PropBomb;
 using bomberman::architecture::Block;
 using bomberman::architecture::FloorTile;
+using bomberman::resources::ResourceManager;
 
 using namespace bomberman::constants;
 
@@ -47,7 +49,7 @@ void GameScene::Init(SDL_Window* window, SDL_Renderer* renderer)
 	{
 		printlog("Mix_PlayMusic: %s\n", Mix_GetError());
 	}
-	_background = utils::LoadTexture(renderer, "drawable/gameback.png");
+	_background = ResourceManager::GetSingleton()->GetTexture("drawable/gameback.png");
 
 	InitPlayers(renderer);
 	InitBlocks(renderer);
@@ -276,7 +278,7 @@ void GameScene::RenderPlayerDashBoard(const PlayerPtr &iPlayer, int pos, SDL_Ren
 
 	auto umpire = std::static_pointer_cast<Umpire>(_presentMap->GetEntity(constants::UMPIRE));
 
-	auto font = utils::LoadFont("drawable/Gamegirl.ttf", 64);
+	auto font = ResourceManager::GetSingleton()->GetFont("drawable/Gamegirl.ttf", 64);
 	std::stringstream ss;
 	ss << "Bx" << (iPlayer->GetAllowedNumberOfBombs() - umpire->GetBombCount(iPlayer->id));
 	auto nbBombsImg = utils::DrawString(renderer, font, ss.str(), utils::MakeColor(0xffffffff));

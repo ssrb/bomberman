@@ -2,8 +2,11 @@
 #include "utils.hpp"
 #include "printlog.hpp"
 #include "constants.hpp"
+#include "resourcemanager.hpp"
 
 #include <sstream>
+
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 
@@ -15,7 +18,7 @@ VictoryScene::VictoryScene(int victor) :
 
 void VictoryScene::Init(SDL_Window* window, SDL_Renderer* renderer)
 {
-	auto font = utils::LoadFont("drawable/Gamegirl.ttf", 64);
+	auto font = ResourceManager::GetSingleton()->GetFont("drawable/Gamegirl.ttf", 64);
 
 	std::stringstream ss;
 	if (_victor == constants::NO_PLAYER)

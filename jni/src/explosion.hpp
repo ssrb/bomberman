@@ -14,7 +14,6 @@ namespace arsenal {
 	typedef std::shared_ptr<Explosion> ExplosionPtr;
 	
 	class Explosion : public Entity {
-
 		public:
 			enum Orientation 
 			{
@@ -27,14 +26,12 @@ namespace arsenal {
 			virtual void Evolve(const std::vector<InputState>& iInputs, Uint32 iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const;
 			virtual void Interact(const std::vector<InputState>& iInputs, Uint32 iTimestamp, const EntitySet &iOthers);
 			virtual void Render(SDL_Renderer*) const;
+		
 		private:
-
-
 			int _timeout;
 			int _stage;
 			Orientation _orientation;
-			static void InitializeGraphicRessources(SDL_Renderer *iRenderer);
-			static std::shared_ptr<SDL_Texture> _Explosion;
+			std::shared_ptr<SDL_Texture> _explosion;
 	};
 }
 }

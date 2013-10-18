@@ -25,8 +25,7 @@ namespace architecture {
 
 			virtual void Kill();
 		protected:
-			static void InitializeGraphicRessources(SDL_Renderer *iRenderer);
-			static std::shared_ptr<SDL_Texture> _SoftBlock;
+			std::shared_ptr<SDL_Texture> _softBlock;
 			double _bonusProbability;
 	};
 }

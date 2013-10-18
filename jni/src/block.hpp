@@ -21,8 +21,7 @@ namespace architecture {
 			virtual void Interact(const std::vector<InputState>& , Uint32 , const EntitySet &) {}
 			virtual void Render(SDL_Renderer* iRenderer) const;
 		protected:
-			static void InitializeGraphicRessources(SDL_Renderer *iRenderer);
-			static std::shared_ptr<SDL_Texture> _Block;
+			std::shared_ptr<SDL_Texture> _block;
 	};
 }
 }

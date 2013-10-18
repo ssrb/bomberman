@@ -41,9 +41,7 @@ namespace bonus {
 			BonusType _bonusType;
 			State _state;
 
-			static void InitializeGraphicRessources(SDL_Renderer *iRenderer);
-
-			static std::map<BonusType, std::shared_ptr<SDL_Texture>> _BonusTexture;
+			std::map<BonusType, std::shared_ptr<SDL_Texture>> _bonusTexture;
 	};
 }
 }

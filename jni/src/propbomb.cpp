@@ -18,14 +18,8 @@ namespace arsenal {
 		bomb->_frameId = 0;
 		bomb->_nextFrameDueTime = 0;
 		bomb->_playerId = iPlayerId;
+		//_Bomb = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/propbomb.png"), SDL_DestroyTexture);
 		return bomb;
-	}
-
-	std::shared_ptr<SDL_Texture>  PropBomb::_Bomb;
-
-	void PropBomb::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	{
-		_Bomb = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/propbomb.png"), SDL_DestroyTexture);
 	}
 
 	void PropBomb::Evolve(const std::vector<InputState>& /*iInputs*/, uint32_t iTimestamp, const MapConstPtr &/*iPresentMap*/, const MapPtr &iFutureMap) const
@@ -39,7 +33,9 @@ namespace arsenal {
 			blast->x = x;
 			blast->y = y;
 			iFutureMap->SetEntity(blast);
-		} else {
+		} 
+		else 
+		{
 
 			auto bomb = std::make_shared<PropBomb>(*this);
 
@@ -56,11 +52,6 @@ namespace arsenal {
 
 	void PropBomb::Render(SDL_Renderer *iRenderer) const 
 	{
-		if (!_Bomb) 
-		{
-			InitializeGraphicRessources(iRenderer);
-		}
-
 		using namespace bomberman::constants;
 		
 		SDL_Rect sourceRect;
@@ -75,7 +66,7 @@ namespace arsenal {
 		r.x = x * TILE_WIDTH + mx * SUBTILE_WIDTH + MAP_X;
 		r.y = y * TILE_WIDTH + my * SUBTILE_WIDTH + MAP_Y;
 
-		SDL_RenderCopy(iRenderer, _Bomb.get(), &sourceRect, &r);
+		SDL_RenderCopy(iRenderer, _bomb.get(), &sourceRect, &r);
 	}
 
 	void PropBomb::Detonate()

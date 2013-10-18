@@ -34,19 +34,11 @@ namespace bonus {
 			}
 		}
 
+		// _BonusTexture.insert(std::make_pair(Bonus::PROPBOMB, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/propbombbonus.png"), SDL_DestroyTexture)));
+		// _BonusTexture.insert(std::make_pair(Bonus::BOMBCOUNT, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/bombbonus.png"), SDL_DestroyTexture)));
+		// _BonusTexture.insert(std::make_pair(Bonus::BOMBSTRENGTH, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/firebonus.png"), SDL_DestroyTexture)));
+
 		return bonus;
-	}
-
-	std::map<Bonus::BonusType, std::shared_ptr<SDL_Texture>> Bonus::_BonusTexture;
-
-	void Bonus::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	{
-		if (_BonusTexture.empty())
-		{
-			_BonusTexture.insert(std::make_pair(Bonus::PROPBOMB, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/propbombbonus.png"), SDL_DestroyTexture)));
-			_BonusTexture.insert(std::make_pair(Bonus::BOMBCOUNT, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/bombbonus.png"), SDL_DestroyTexture)));
-			_BonusTexture.insert(std::make_pair(Bonus::BOMBSTRENGTH, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/firebonus.png"), SDL_DestroyTexture)));
-		}
 	}
 
 	void Bonus::Evolve(const std::vector<InputState>& /*iInputs*/, uint32_t /*iTimestamp*/, const MapConstPtr &/*iPresentMap*/, const MapPtr &iFutureMap) const
@@ -59,8 +51,6 @@ namespace bonus {
 
 	void Bonus::Render(SDL_Renderer *iRenderer) const 
 	{
-		InitializeGraphicRessources(iRenderer);
-
 		using namespace bomberman::constants;
 		
 		SDL_Rect r;
@@ -69,7 +59,7 @@ namespace bonus {
 		r.x = x * TILE_WIDTH + MAP_X;
 		r.y = y * TILE_WIDTH + MAP_Y;
 		
-		SDL_RenderCopy(iRenderer, _BonusTexture[_bonusType].get(), nullptr, &r);
+		SDL_RenderCopy(iRenderer, _bonusTexture.find(_bonusType)->second.get(), nullptr, &r);
 	}
 }
 }

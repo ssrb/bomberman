@@ -49,15 +49,13 @@ namespace arsenal {
 		return explosion;
 	}
 
-	std::shared_ptr<SDL_Texture> PropExplosion::_Explosion[];
-
-	void PropExplosion::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	{
-		_Explosion[0] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion1.png"), SDL_DestroyTexture);
-		_Explosion[1] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion2.png"), SDL_DestroyTexture);
-		_Explosion[2] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion3.png"), SDL_DestroyTexture);
-		_Explosion[3] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion4.png"), SDL_DestroyTexture);
-	}
+	// void PropExplosion::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
+	// {
+	// 	_Explosion[0] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion1.png"), SDL_DestroyTexture);
+	// 	_Explosion[1] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion2.png"), SDL_DestroyTexture);
+	// 	_Explosion[2] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion3.png"), SDL_DestroyTexture);
+	// 	_Explosion[3] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion4.png"), SDL_DestroyTexture);
+	// }
 
 	void PropExplosion::Evolve(const std::vector<InputState>& /*iInputs*/, Uint32 iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const
 	{
@@ -138,11 +136,6 @@ namespace arsenal {
 
 	void PropExplosion::Render(SDL_Renderer *iRenderer) const 
 	{
-		if (!_Explosion[0]) 
-		{
-			InitializeGraphicRessources(iRenderer);
-		}
-
 		using namespace bomberman::constants;
 		
 		SDL_Rect r;
@@ -151,7 +144,7 @@ namespace arsenal {
 		r.x = x * TILE_WIDTH + MAP_X;
 		r.y = y * TILE_WIDTH + MAP_Y;
 		
-		SDL_RenderCopy(iRenderer, _Explosion[_stage].get(), nullptr, &r);
+		SDL_RenderCopy(iRenderer, _explosion[_stage].get(), nullptr, &r);
 	}
 
 	 void PropExplosion::Propagate(Uint32 iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const

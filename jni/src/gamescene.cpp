@@ -6,7 +6,8 @@
 #include "softblock.hpp"
 #include "floortile.hpp"
 #include "printlog.hpp"
-#include "constants.hpp"
+#include "constants_resolution.hpp"
+#include "constants_game.hpp"
 #include "utils.hpp"
 #include "printlog.hpp"
 #include "computer.hpp"
@@ -37,7 +38,8 @@ GameScene::GameScene(const PlayerConfigArray &playerConfig) :
 	_music(Mix_LoadMUS("music/premonition.flac"), Mix_FreeMusic),
 	_presentMap(new Map(MAP_COLUMNS, MAP_ROWS)),
 	_playerConfig(playerConfig),
-	_pastMaps(1024)
+	_pastMaps(1024),
+	_font(utils::LoadFont("drawable/Gamegirl.ttf", 64))
 {
 }
 
@@ -281,7 +283,7 @@ void GameScene::RenderPlayerDashBoard(const PlayerPtr &iPlayer, int pos, SDL_Ren
 	auto font = ResourceManager::GetSingleton()->GetFont("drawable/Gamegirl.ttf", 64);
 	std::stringstream ss;
 	ss << "Bx" << (iPlayer->GetAllowedNumberOfBombs() - umpire->GetBombCount(iPlayer->id));
-	auto nbBombsImg = utils::DrawString(renderer, font, ss.str(), utils::MakeColor(0xffffffff));
+	auto nbBombsImg = utils::DrawString(renderer, _font, ss.str(), utils::MakeColor(0xffffffff));
 
 	SDL_Rect nbBombsRect;
 	nbBombsRect.w = 100;

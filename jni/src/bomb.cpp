@@ -1,6 +1,7 @@
 #include "bomb.hpp"
 #include "explosion.hpp"
-#include "constants.hpp"
+#include "constants_resolution.hpp"
+#include "constants_game.hpp"
 #include "softblock.hpp"
 #include "block.hpp"
 #include "printlog.hpp"
@@ -55,7 +56,7 @@ namespace arsenal {
 		auto bomb = std::make_shared<Bomb>();
 		bomb->_timeout = iTimeout;
 		bomb->_strength = iStrength;
-		bomb->zlevel = 2;
+		bomb->zlevel = constants::BOMB_ZLEVEL;
 		bomb->_detonating = false;
 		bomb->_frameId = 0;
 		bomb->_nextFrameDueTime = 0;

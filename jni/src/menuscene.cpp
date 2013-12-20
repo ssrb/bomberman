@@ -1,5 +1,5 @@
 #include "menuscene.hpp"
-#include "constants.hpp"
+#include "constants_resolution.hpp"
 #include "utils.hpp"
 #include "resourcemanager.hpp"
 
@@ -56,6 +56,7 @@ void MenuScene::Update(const std::vector<InputState>& inputs, uint32_t timestamp
 	if (inputs[0].GetButtonPressed(InputState::A))
 	{
 		_running = false;
+
 	}
 }
 

@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"Get",
+				"GetFont(const std::string &fontName, int ptSize) const	std::shared_ptr<TTF_Font>"
+			],
+			[
 				"Entity",
 				"EntityPtr"
 			],
@@ -20,11 +24,298 @@
 	"buffers":
 	[
 		{
-			"file": "bomberman.sublime-project",
+			"file": "jni/src/main.cpp",
 			"settings":
 			{
-				"buffer_size": 665,
+				"buffer_size": 8968,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 1 file for \"test/\"\n\nUnable to open /home/sb/Hacking/OUYA-ODK/bomberman/jni/src\n0 matches across 0 files\n\n\nSearching 1 file for \"test/\"\n\nUnable to open /home/sb/Hacking/OUYA-ODK/bomberman/jni/src\n0 matches across 0 files\n\n\nSearching 1 file for \"test/\"\n\nUnable to open /home/doccarcass/Hacking/OUYA-ODK/bomberman/jni/src\n0 matches across 0 files\n\n\nSearching 54 files for \"test/\"\n\n/home/doccarcass/Hacking/bomberman/jni/src/block.cpp:\n   20  	void Block::InitializeGraphicRessources(SDL_Renderer *iRenderer) \n   21  	{\n   22: 		_Block = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/block.png\"), SDL_DestroyTexture);\n   23  	}\n   24  \n\n/home/doccarcass/Hacking/bomberman/jni/src/bomb.cpp:\n   69  		if (!_Bomb)\n   70  		{\n   71: 			_Bomb = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/bomb.png\"), SDL_DestroyTexture);\n   72  		}\n   73  		\n\n/home/doccarcass/Hacking/bomberman/jni/src/bonus.cpp:\n   44  		if (_BonusTexture.empty())\n   45  		{\n   46: 			_BonusTexture.insert(std::make_pair(Bonus::PROPBOMB, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/propbombbonus.png\"), SDL_DestroyTexture)));\n   47: 			_BonusTexture.insert(std::make_pair(Bonus::BOMBCOUNT, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/bombbonus.png\"), SDL_DestroyTexture)));\n   48: 			_BonusTexture.insert(std::make_pair(Bonus::BOMBSTRENGTH, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/firebonus.png\"), SDL_DestroyTexture)));\n   49  		}\n   50  	}\n\n/home/doccarcass/Hacking/bomberman/jni/src/explosion.cpp:\n   35  	void Explosion::InitializeGraphicRessources(SDL_Renderer *iRenderer) \n   36  	{\n   37: 		_Explosion = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/flare.png\"), SDL_DestroyTexture);\n   38  	}\n   39  \n\n/home/doccarcass/Hacking/bomberman/jni/src/floortile.cpp:\n   20  	void FloorTile::InitializeGraphicRessources(SDL_Renderer *iRenderer) \n   21  	{\n   22: 		_FloorTile = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/floor.png\"), SDL_DestroyTexture);\n   23  	}\n   24  \n\n/home/doccarcass/Hacking/bomberman/jni/src/gamescene.cpp:\n   48  		printlog(\"Mix_PlayMusic: %s\\n\", Mix_GetError());\n   49  	}\n   50: 	_background = utils::LoadTexture(renderer, \"test/gameback.png\");\n   51  \n   52  	InitPlayers(renderer);\n   ..\n  277  	auto umpire = std::static_pointer_cast<Umpire>(_presentMap->GetEntity(constants::UMPIRE));\n  278  \n  279: 	auto font = utils::LoadFont(\"test/Gamegirl.ttf\", 64);\n  280  	std::stringstream ss;\n  281  	ss << \"Bx\" << (iPlayer->GetAllowedNumberOfBombs() - umpire->GetBombCount(iPlayer->id));\n\n/home/doccarcass/Hacking/bomberman/jni/src/menuscene.cpp:\n   13  void MenuScene::Init(SDL_Window* window, SDL_Renderer* renderer)\n   14  {\n   15: 	auto font = utils::LoadFont(\"test/Gamegirl.ttf\", 16 * constants::SPRITE_MAGNIFICATION);\n   16  \n   17  	_selectionTwink = std::shared_ptr<Mix_Chunk>(Mix_LoadWAV(\"sound/select.wav\"), Mix_FreeChunk);\n   18  \n   19: 	_background = utils::LoadTexture(renderer, \"test/mainback.png\");\n   20  	\n   21: 	_bombcursor = utils::LoadTexture(renderer, \"test/bombcursor.png\");\n   22  \n   23  	_newGame = utils::DrawString(renderer, font, \"New Game\", utils::MakeColor(0xffffffff));\n\n/home/doccarcass/Hacking/bomberman/jni/src/propbomb.cpp:\n   26  	void PropBomb::InitializeGraphicRessources(SDL_Renderer *iRenderer) \n   27  	{\n   28: 		_Bomb = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/propbomb.png\"), SDL_DestroyTexture);\n   29  	}\n   30  \n\n/home/doccarcass/Hacking/bomberman/jni/src/propexplosion.cpp:\n   54  	void PropExplosion::InitializeGraphicRessources(SDL_Renderer *iRenderer) \n   55  	{\n   56: 		_Explosion[0] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/explosion1.png\"), SDL_DestroyTexture);\n   57: 		_Explosion[1] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/explosion2.png\"), SDL_DestroyTexture);\n   58: 		_Explosion[2] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/explosion3.png\"), SDL_DestroyTexture);\n   59: 		_Explosion[3] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/explosion4.png\"), SDL_DestroyTexture);\n   60  	}\n   61  \n\n/home/doccarcass/Hacking/bomberman/jni/src/setupscene.cpp:\n   16  	_selectionTwink = std::shared_ptr<Mix_Chunk>(Mix_LoadWAV(\"sound/select.wav\"), Mix_FreeChunk);\n   17  \n   18: 	_background = utils::LoadTexture(renderer, \"test/setupback.png\");\n   19: 	_playerReady =  utils::LoadTexture(renderer, \"test/playerstatus.png\");\n   20  	\n   21  	for (int i=0;i<4;i++)\n   ..\n   27  \n   28  	players[0].name = \"Athos\";\n   29: 	players[0].spriteName = \"test/SaturnBomberman-BlackBomberman.PNG\";\n   30  \n   31  	players[1].name = \"Porthos\";\n   32: 	players[1].spriteName = \"test/honey.png\";\n   33  \n   34  	players[2].name = \"Aramis\";\n   35: 	players[2].spriteName = \"test/manji.png\";\n   36  \n   37  	players[3].name = \"D'Artagnan\";\n   38: 	players[3].spriteName = \"test/whitebbman.png\";\n   39  	\n   40  	_running = true;\n\n/home/doccarcass/Hacking/bomberman/jni/src/softblock.cpp:\n   25  	void SoftBlock::InitializeGraphicRessources(SDL_Renderer *iRenderer) \n   26  	{\n   27: 		_SoftBlock = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, \"test/softblock.png\"), SDL_DestroyTexture);\n   28  	}\n   29  \n\n/home/doccarcass/Hacking/bomberman/jni/src/victoryscene.cpp:\n   16  void VictoryScene::Init(SDL_Window* window, SDL_Renderer* renderer)\n   17  {\n   18: 	auto font = utils::LoadFont(\"test/Gamegirl.ttf\", 64);\n   19  \n   20  	std::stringstream ss;\n\n25 matches across 12 files\n",
+			"settings":
+			{
+				"buffer_size": 5555,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "jni/src/bonus.cpp",
+			"settings":
+			{
+				"buffer_size": 1850,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/explosion.cpp",
+			"settings":
+			{
+				"buffer_size": 2940,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/floortile.cpp",
+			"settings":
+			{
+				"buffer_size": 972,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/gamescene.cpp",
+			"settings":
+			{
+				"buffer_size": 7360,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/bomb.cpp",
+			"settings":
+			{
+				"buffer_size": 3605,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/block.cpp",
+			"settings":
+			{
+				"buffer_size": 950,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/menuscene.cpp",
+			"settings":
+			{
+				"buffer_size": 2367,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/propbomb.cpp",
+			"settings":
+			{
+				"buffer_size": 1875,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/propexplosion.cpp",
+			"settings":
+			{
+				"buffer_size": 6899,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/softblock.cpp",
+			"settings":
+			{
+				"buffer_size": 1364,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/victoryscene.cpp",
+			"settings":
+			{
+				"buffer_size": 1392,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "",
+			"file": "genRessources.pl",
+			"file_size": -1,
+			"file_write_time": -1,
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/inputstate.hpp",
+			"settings":
+			{
+				"buffer_size": 1272,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/inputstate.cpp",
+			"settings":
+			{
+				"buffer_size": 554,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/constants.hpp",
+			"settings":
+			{
+				"buffer_size": 2952,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/computer.hpp",
+			"settings":
+			{
+				"buffer_size": 734,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/block.hpp",
+			"settings":
+			{
+				"buffer_size": 646,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/bomb.hpp",
+			"settings":
+			{
+				"buffer_size": 868,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/bonus.hpp",
+			"settings":
+			{
+				"buffer_size": 952,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/explosion.hpp",
+			"settings":
+			{
+				"buffer_size": 831,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/floortile.hpp",
+			"settings":
+			{
+				"buffer_size": 674,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/player.hpp",
+			"settings":
+			{
+				"buffer_size": 1763,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/player.cpp",
+			"settings":
+			{
+				"buffer_size": 8432,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/propbomb.hpp",
+			"settings":
+			{
+				"buffer_size": 818,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/propexplosion.hpp",
+			"settings":
+			{
+				"buffer_size": 962,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/softblock.hpp",
+			"settings":
+			{
+				"buffer_size": 765,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "jni/src/computer.cpp",
+			"settings":
+			{
+				"buffer_size": 1597,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/resourcemanager.hpp",
+			"settings":
+			{
+				"buffer_size": 813,
+				"line_ending": "Unix",
+				"name": "#pragma once"
+			}
+		},
+		{
+			"file": "jni/src/resourcemanager.cpp",
+			"settings":
+			{
+				"buffer_size": 981,
+				"line_ending": "Unix",
+				"name": "#include \"resourcemqnqger.hpp\""
+			}
+		},
+		{
+			"file": "jni/src/utils.hpp",
+			"settings":
+			{
+				"buffer_size": 643,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/utils.cpp",
+			"settings":
+			{
+				"buffer_size": 1601,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/setupscene.cpp",
+			"settings":
+			{
+				"buffer_size": 3193,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/setupscene.hpp",
+			"settings":
+			{
+				"buffer_size": 756,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "jni/src/touchscreenkeyscene.hpp",
+			"settings":
+			{
+				"buffer_size": 686,
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -128,6 +419,8 @@
 	},
 	"file_history":
 	[
+		"/home/doccarcass/Hacking/bomberman/bomberman.sublime-project",
+		"/home/doccarcass/Hacking/bomberman/Makefile.linux",
 		"/home/doccarcass/Hacking/bomberman.android/jni/bomberman.sublime-project",
 		"/home/doccarcass/Hacking/bomberman.android/jni/bomberman.sublime-workspace",
 		"/home/doccarcass/Hacking/bomberman.linux/jni/luacppinterface/configure.ac",
@@ -253,9 +546,7 @@
 		"/home/sb/Hacking/GeoBase/Devel/geobase.dll/stdafx.h",
 		"/home/sb/Hacking/GeoBase/Devel/geobase.dll/png_cache/png_cache.cpp",
 		"/home/sb/Hacking/GeoBase/Devel/geobase.dll/ReachableAreaInterop_gen.cpp",
-		"/home/sb/Hacking/GeoBase/Devel/geobase.dll/RepositoryInterop_gen.cpp",
-		"/home/sb/Hacking/GeoBase/Devel/geobase.dll/RoutingInterop_gen.cpp",
-		"/home/sb/Hacking/GeoBase/Devel/geobase.dll/TrafficInterop_gen.cpp"
+		"/home/sb/Hacking/GeoBase/Devel/geobase.dll/RepositoryInterop_gen.cpp"
 	],
 	"find":
 	{
@@ -266,6 +557,8 @@
 		"height": 0.0,
 		"where_history":
 		[
+			"/home/doccarcass/Hacking/bomberman/jni/src",
+			"/home/doccarcass/Hacking/OUYA-ODK/bomberman/jni/src",
 			"/home/sb/Hacking/OUYA-ODK/bomberman/jni/src",
 			""
 		]
@@ -275,6 +568,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"		\n",
+			"\"test/",
+			"test/",
 			"Evolve",
 			"get_setting",
 			"load_settings",
@@ -329,6 +625,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"\"drawable/",
 			"EntityPtr",
 			"",
 			"SDL_CreateRGBSurface",
@@ -344,28 +641,1086 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "bomberman.sublime-project",
+					"file": "jni/src/main.cpp",
 					"settings":
 					{
-						"buffer_size": 665,
+						"buffer_size": 8968,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								115,
-								115
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 5190.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"settings":
+					{
+						"buffer_size": 5555,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										601,
+										606
+									],
+									[
+										819,
+										824
+									],
+									[
+										1100,
+										1105
+									],
+									[
+										1270,
+										1275
+									],
+									[
+										1439,
+										1444
+									],
+									[
+										1731,
+										1736
+									],
+									[
+										2014,
+										2019
+									],
+									[
+										2250,
+										2255
+									],
+									[
+										2460,
+										2465
+									],
+									[
+										2788,
+										2793
+									],
+									[
+										3017,
+										3022
+									],
+									[
+										3099,
+										3104
+									],
+									[
+										3445,
+										3450
+									],
+									[
+										3742,
+										3747
+									],
+									[
+										3868,
+										3873
+									],
+									[
+										3994,
+										3999
+									],
+									[
+										4120,
+										4125
+									],
+									[
+										4404,
+										4409
+									],
+									[
+										4480,
+										4485
+									],
+									[
+										4626,
+										4631
+									],
+									[
+										4746,
+										4751
+									],
+									[
+										4840,
+										4845
+									],
+									[
+										4938,
+										4943
+									],
+									[
+										5220,
+										5225
+									],
+									[
+										5464,
+										5469
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								1229,
+								1229
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 4,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 529.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "jni/src/bonus.cpp",
+					"settings":
+					{
+						"buffer_size": 1850,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1256,
+								1256
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 460.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "jni/src/explosion.cpp",
+					"settings":
+					{
+						"buffer_size": 2940,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2870,
+								2870
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1550.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "jni/src/floortile.cpp",
+					"settings":
+					{
+						"buffer_size": 972,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								430,
+								430
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 211.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "jni/src/gamescene.cpp",
+					"settings":
+					{
+						"buffer_size": 7360,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6755,
+								6755
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2581.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "jni/src/bomb.cpp",
+					"settings":
+					{
+						"buffer_size": 3605,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1283,
+								1283
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "jni/src/block.cpp",
+					"settings":
+					{
+						"buffer_size": 950,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								422,
+								422
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 183.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "jni/src/menuscene.cpp",
+					"settings":
+					{
+						"buffer_size": 2367,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								973,
+								973
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1234.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "jni/src/propbomb.cpp",
+					"settings":
+					{
+						"buffer_size": 1875,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1098,
+								1098
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 29.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "jni/src/propexplosion.cpp",
+					"settings":
+					{
+						"buffer_size": 6899,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3900,
+								3900
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "jni/src/softblock.cpp",
+					"settings":
+					{
+						"buffer_size": 1364,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								572,
+								572
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 633.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "jni/src/victoryscene.cpp",
+					"settings":
+					{
+						"buffer_size": 1392,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								512,
+								512
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 204.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "genRessources.pl",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Perl/Perl.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "jni/src/inputstate.hpp",
+					"settings":
+					{
+						"buffer_size": 1272,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "jni/src/inputstate.cpp",
+					"settings":
+					{
+						"buffer_size": 554,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 472.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "jni/src/constants.hpp",
+					"settings":
+					{
+						"buffer_size": 2952,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1612.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "jni/src/computer.hpp",
+					"settings":
+					{
+						"buffer_size": 734,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 240.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "jni/src/block.hpp",
+					"settings":
+					{
+						"buffer_size": 646,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								636,
+								636
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 46.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "jni/src/bomb.hpp",
+					"settings":
+					{
+						"buffer_size": 868,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								54,
+								54
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 43.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 20,
+					"file": "jni/src/bonus.hpp",
+					"settings":
+					{
+						"buffer_size": 952,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								931,
+								931
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 28.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+					"file": "jni/src/explosion.hpp",
+					"settings":
+					{
+						"buffer_size": 831,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								243,
+								243
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 349.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 22,
+					"file": "jni/src/floortile.hpp",
+					"settings":
+					{
+						"buffer_size": 674,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								280,
+								280
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 251.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 23,
+					"file": "jni/src/player.hpp",
+					"settings":
+					{
+						"buffer_size": 1763,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1417,
+								1417
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 861.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 24,
+					"file": "jni/src/player.cpp",
+					"settings":
+					{
+						"buffer_size": 8432,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 6307.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 25,
+					"file": "jni/src/propbomb.hpp",
+					"settings":
+					{
+						"buffer_size": 818,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								770,
+								770
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 132.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 26,
+					"file": "jni/src/propexplosion.hpp",
+					"settings":
+					{
+						"buffer_size": 962,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								941,
+								941
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 416.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 27,
+					"file": "jni/src/softblock.hpp",
+					"settings":
+					{
+						"buffer_size": 765,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								718,
+								718
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 254.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 28,
+					"file": "jni/src/computer.cpp",
+					"settings":
+					{
+						"buffer_size": 1597,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								894,
+								894
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 76.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 29,
+					"file": "jni/src/resourcemanager.hpp",
+					"settings":
+					{
+						"buffer_size": 813,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								646,
+								646
+							]
+						],
+						"settings":
+						{
+							"auto_name": "#pragma once",
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 91.0,
+						"translation.y": 11.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 30,
+					"file": "jni/src/resourcemanager.cpp",
+					"settings":
+					{
+						"buffer_size": 981,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								882,
+								882
+							]
+						],
+						"settings":
+						{
+							"auto_name": "#include \"resourcemqnqger.hpp\"",
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 159.0,
+						"translation.y": 189.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 31,
+					"file": "jni/src/utils.hpp",
+					"settings":
+					{
+						"buffer_size": 643,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14,
+								14
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 32,
+					"file": "jni/src/utils.cpp",
+					"settings":
+					{
+						"buffer_size": 1601,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								282,
+								282
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 937.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 33,
+					"file": "jni/src/setupscene.cpp",
+					"settings":
+					{
+						"buffer_size": 3193,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 140.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 34,
+					"file": "jni/src/setupscene.hpp",
+					"settings":
+					{
+						"buffer_size": 756,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 336.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 35,
+					"file": "jni/src/touchscreenkeyscene.hpp",
+					"settings":
+					{
+						"buffer_size": 686,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -409,7 +1764,7 @@
 	"menu_visible": true,
 	"output.clang":
 	{
-		"height": 88.0
+		"height": 99.0
 	},
 	"output.clang_static_analyzer":
 	{
@@ -592,6 +1947,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 118.0,
+	"side_bar_width": 185.0,
 	"status_bar_visible": true
 }

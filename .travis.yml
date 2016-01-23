@@ -3,7 +3,7 @@ rvm:
     - 2.0.0
 env:
   matrix:
-    - THE_MAKEFILE=Makefile.android
+#    - THE_MAKEFILE=Makefile.android
     - THE_MAKEFILE=Makefile
   global:
     - ARTIFACTS_AWS_REGION=us-east-1

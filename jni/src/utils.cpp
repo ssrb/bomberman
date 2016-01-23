@@ -1,4 +1,3 @@
-
 #include "constants_resolution.hpp"
 #include "utils.hpp"
 

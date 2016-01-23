@@ -335,7 +335,7 @@ namespace bestiary {
 		src.x = _state > 3 ? 0 : _frameId * 16;
 		src.y = idx * 32;
 
-		SDL_RenderCopy(iRenderer, _bomberman.get(), &src[idx], &dst);
+		SDL_RenderCopy(iRenderer, _bomberman.get(), &src, &dst);
 	}
 
 	void Player::Kill()

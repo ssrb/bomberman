@@ -1,6 +1,7 @@
 #include "block.hpp"
 #include "constants_resolution.hpp"
 #include "constants_game.hpp"
+#include "resourcemanager.hpp"
 
 // SDL
 #include <SDL_image.h>

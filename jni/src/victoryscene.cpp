@@ -3,6 +3,7 @@
 #include "printlog.hpp"
 #include "constants_resolution.hpp"
 #include "constants_game.hpp"
+#include "resourcemanager.hpp"
 
 #include <sstream>
 

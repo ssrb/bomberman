@@ -8,7 +8,7 @@ Bomberman!
 Screenshots
 ===========
 
-![Screenshot of game 1](https://raw.github.com/ssrb/bomberman/macosx/screenshots/screenshot-1.png)
+![Screenshot of game 1](https://raw.githubusercontent.com/ssrb/bomberman/master/screenshots/screenshot-1.png)
 
 Building
 ========

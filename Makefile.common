@@ -24,7 +24,7 @@ CXXFLAGS=$(EXTRA_CFLAGS) -DSMALL_SCREEN \
 	-I$(PWD)/jni/luacppinterface/lua/src \
 	-I$(PWD)/jni/boost
 	
-LDFLAGS=$(shell $(SDL2CONFIG) --libs) -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lstdc++
+LDFLAGS=$(shell $(SDL2CONFIG) --libs) -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lstdc++ -lm
 
 TARGET=assets/bomberman
 SRCDIR=jni/src
@@ -51,7 +51,7 @@ endif
 
 $(TARGET): $(SDL2CONFIG) $(OBJS) $(LUA)
 	$(AT)echo [LINK] $@
-	$(AT)$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@ 
+	$(AT)$(CXX) $(OBJS) $(LUA) $(CXXFLAGS) $(LDFLAGS) -o $@ 
 
 $(SDL2CONFIG): $(SDL2MAIN) $(SDL2IMAGE) $(SDL2MIXER) $(SDL2TTF)
 

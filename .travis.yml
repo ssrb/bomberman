@@ -20,6 +20,6 @@ install:
 before_script:
   - gem install travis-artifacts
 script:
-  - make -j -f $THE_MAKEFILE all
+  - make -j 5 -f $THE_MAKEFILE all
 #after_success:
 #  - if [ $TRAVIS_REPO_SLUG = ssrb/bomberman ] && [ $THE_MAKEFILE = Makefile.android ]; then travis-artifacts upload --path bin/Bomberman-debug.apk; fi

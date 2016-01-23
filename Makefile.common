@@ -49,20 +49,22 @@ ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
     -include $(DEPS)
 endif
 
-$(TARGET): $(OBJS) $(LUA)
+$(TARGET): $(SDL2CONFIG) $(OBJS) $(LUA)
 	$(AT)echo [LINK] $@
 	$(AT)$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@ 
+
+$(SDL2CONFIG): $(SDL2MAIN) $(SDL2IMAGE) $(SDL2MIXER) $(SDL2TTF)
 
 %/.f:
 	$(AT)echo [MKDIR] $(dir $@)
 	$(AT)mkdir -p $(dir $@) 
 	$(AT)touch $@
 
-$(OUT)/%.d:%.cpp $$(@D)/.f $(SDL2MAIN) $(SDL2IMAGE) $(SDL2MIXER) $(SDL2TTF) 
+$(OUT)/%.d:%.cpp $(SDL2CONFIG) $$(@D)/.f
 	$(AT)echo [DEP] $<
 	$(AT)$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst %.d,%.o,$@)' $< -MF $@
 
-$(OUT)/%.o:%.cpp $(OUT)/%.d
+$(OUT)/%.o:%.cpp $(SDL2CONFIG) $(OUT)/%.d
 	$(AT)echo [C++] $<
 	$(AT)$(CXX) $< $(CXXFLAGS) -c -o $@
 

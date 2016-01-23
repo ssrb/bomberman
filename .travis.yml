@@ -1,5 +1,6 @@
 language: java cpp
-
+rvm:  
+    - 2.0.0
 env:
   matrix:
     - THE_MAKEFILE=Makefile.android

@@ -9,6 +9,7 @@
 #include "constants_game.hpp"
 #include "umpire.hpp"
 #include "printlog.hpp"
+#include "floortile.hpp"
 	
 // SDL
 #include <SDL.h>
@@ -30,35 +31,6 @@ namespace bestiary {
 		{
 			return (x > 0) - (x < 0);
 		}
-		
-		inline bool CanStayAt(const MapConstPtr &iMap, int x, int y)
-		{	
-			return iMap->CheckPosition(x, y) == Map::FREE;
-		}
-
-		inline bool PreventDiagonalMovement(std::shared_ptr<Entity> ntt) 
-		{
-			if (ntt->mx != 0 && ntt->dy != 0)
-			{
-				ntt->dy = 0;
-			}
-	      
-			if (ntt->my != 0 && ntt->dx != 0)
-			{
-				ntt->dx = 0;
-			}
-	      
-			if (ntt->mx == 0 && ntt->my == 0)
-			{
-				if (ntt->dx && ntt->dy)
-				{
-					ntt->dy = 0;
-					ntt->dx = 0;
-					return false;
-				}
-			}
-			return true;
-		}
 	}
 
 	PlayerPtr Player::Create(PlayerId id, const std::string &iName, const std::string &iSpriteName, int iInputStateIdx, SDL_Renderer* iRenderer)
@@ -76,6 +48,8 @@ namespace bestiary {
 		player->_nbProBomb = 0;
 		player->_availableBombs = 1;
 		player->_bombStrength = 2;
+        player->_bombPosX = -1000;
+        player->_bombPosY = -1000;
 		return player;
 	}
 
@@ -102,8 +76,8 @@ namespace bestiary {
 		if (_state == Dying)
 		{
 			auto corpse = Corpse::Create(_bomberman);
-			corpse->x = this->x;
-			corpse->y = this->y;
+			corpse->SetX(GetX());
+			corpse->SetY(GetY());
 			corpse->mx = this->mx;
 			corpse->my = this->my;
 			iFutureMap->SetEntity(corpse);
@@ -115,35 +89,38 @@ namespace bestiary {
 		
 		if (inputs.GetButtonState(InputState::LEFT))
 		{
-			player->dx = -constants::PLAYER_SPEED;
-			player->_state = WalkingLeft;
+            player->dx = -constants::PLAYER_SPEED;
 		}
 		else if (inputs.GetButtonState(InputState::RIGHT))
 		{
-			player->dx = constants::PLAYER_SPEED;
-			player->_state = WalkingRight;
+            player->dx = constants::PLAYER_SPEED;
 		}
-		else if (inputs.GetButtonState(InputState::DOWN))
+        
+		if (inputs.GetButtonState(InputState::DOWN))
 		{
-			player->dy = constants::PLAYER_SPEED;
-			player->_state = WalkingDown;
+            player->dy = constants::PLAYER_SPEED;
 		}
 		else if (inputs.GetButtonState(InputState::UP))
 		{
-			player->dy = -constants::PLAYER_SPEED;
-			player->_state = WalkingUp;
-		} 
-		else if (player->dx == 0 && player->dy == 0)
+            player->dy = -constants::PLAYER_SPEED;
+		}
+        
+        if (player->dx == 0 && player->dy == 0)
 		{
-		  player->_state = DynamicToStaticState(_state);
+			player->_state = DynamicToStaticState(_state);
+		}
+
+		if (inputs.GetButtonPressed(InputState::A))
+		{
+
 		}
 		
-		if (inputs.GetButtonPressed(InputState::A))
+		if (inputs.GetButtonPressed(InputState::X))
 		{
 			// make sure there isn't already a bomb there
 			bool alreadyBombed = false;
 			
-			BOOST_FOREACH(auto entity, iPresentMap->GetEntities(player->x, player->y))
+			BOOST_FOREACH(auto entity, iPresentMap->GetEntities(player->GetX(), player->GetY()))
 			{
 				if (typeid(*entity) == typeid(Bomb))
 				{
@@ -151,8 +128,20 @@ namespace bestiary {
 					break;
 				}
 			}
+            
+            bool climbedOff = false;
+            // make sure we already climbed off another bomb
+            if (
+                player->mx >= player->_bombPosX + constants::AMOUNT_PER_TILE ||
+                player->mx + constants::AMOUNT_PER_TILE <= player->_bombPosX ||
+                player->my >= player->_bombPosY + constants::AMOUNT_PER_TILE ||
+                player->my + constants::AMOUNT_PER_TILE <= player->_bombPosY
+                )
+            {
+                climbedOff = true;
+            }
 
-			if (!alreadyBombed && umpire->GetBombCount(id) < _availableBombs)
+			if (!alreadyBombed && climbedOff && umpire->GetBombCount(id) < _availableBombs)
 			{
 				const int kBombTimer = 3000;
 				EntityPtr newBomb;
@@ -167,9 +156,12 @@ namespace bestiary {
 				}
 				umpire->IncrementBombCount(id);
 
-				newBomb->x = player->x;
-				newBomb->y = player->y;
-
+				newBomb->SetX(player->GetX());
+				newBomb->SetY(player->GetY());
+                
+                player->_bombPosX = newBomb->mx;
+                player->_bombPosY = newBomb->my;
+                
 				iFutureMap->SetEntity(newBomb);
 				
 				if (Mix_PlayChannel(-1, _bombPlaceSound.get(), 0) == -1)
@@ -186,75 +178,123 @@ namespace bestiary {
 			player->_nextFrameDueTime = iTimestamp + constants::PLAYER_FRAME_UPDATE_DELAY;
 		}
 		
-		if (_nextUpdateDueTime < iTimestamp)
+		if (_nextUpdateDueTime < iTimestamp && (player->dx || player->dy))
 		{
 			player->_nextUpdateDueTime = iTimestamp + constants::PLAYER_UPDATE_DELAY;
-	       
-			int dx = player->dx;
-			int dy = player->dy;
+            
+            int nx = player->mx + player->dx;
+            int ny = player->my + player->dy;
+            
+            if (CanMoveTo(nx, player->my, iPresentMap, player))
+            {
+                player->mx = nx;
+            }
+            
+            if (CanMoveTo(player->mx, ny, iPresentMap, player))
+            {
+                player->my = ny;
+            }
 
-			if (PreventDiagonalMovement(player))
-			{
-				if (dx != 0 || dy != 0)
-				{
-					if (player->mx == 0 && player->my == 0)
-					{
-						// object moving from flush
-						int xprime = player->x + sign(dx);
-						int yprime = player->y + sign(dy);
-
-						if (CanStayAt(iPresentMap, xprime, yprime))
-						{
-							player->mx = sign(dx);
-							player->my = sign(dy);
-						}
-						else
-						{
-						    player->_state = DynamicToStaticState(_state);
-						}
-					}
-					else
-					{
-						// calculate where we will be
-						int mxprime = 0, myprime = 0;
-
-						if (player->mx) 
-						{
-							mxprime = player->mx + sign(dx);
-						}
-						else if (player->my)
-						{	
-							myprime = player->my + sign(dy);
-						}
-				
-						if (abs(mxprime) >= constants::AMOUNT_PER_TILE || abs(myprime) >= constants::AMOUNT_PER_TILE)
-						{
-							// completing transition
-							int xprime = player->x + sign(player->mx);
-							int yprime = player->y + sign(player->my);
-					
-							player->x = xprime;
-							player->y = yprime;
-							player->mx = 0;
-							player->my = 0;
-							player->dx = 0;
-							player->dy = 0;
-
-						}
-						else
-						{
-							// simple move
-							player->mx = mxprime;
-							player->my = myprime;
-						}
-					}
-				}
-			}
-		}
+            // stop if flush
+            if (player->mx % constants::AMOUNT_PER_TILE == 0)
+            {
+                player->dx = 0;
+            }
+            
+            if (player->my % constants::AMOUNT_PER_TILE == 0)
+            {
+                player->dy = 0;
+            }
+            
+            // reset bomb position (climbed off a bomb)
+            if (
+                player->mx >= player->_bombPosX + constants::AMOUNT_PER_TILE ||
+                player->mx + constants::AMOUNT_PER_TILE <= player->_bombPosX ||
+                player->my >= player->_bombPosY + constants::AMOUNT_PER_TILE ||
+                player->my + constants::AMOUNT_PER_TILE <= player->_bombPosY
+                )
+            {
+                player->_bombPosX = -1000;
+                player->_bombPosY = -1000;
+            }
+            
+            if (player->dx < 0) { player->_state = WalkingLeft; }
+            if (player->dx > 0) { player->_state = WalkingRight; }
+            if (player->dy < 0) { player->_state = WalkingUp; }
+            if (player->dy > 0) { player->_state = WalkingDown; }
+        }
 
 		iFutureMap->SetEntity(player);
 	}
 
+    bool Player::CanMoveTo(int mx, int my, const MapConstPtr &iPresentMap, PlayerPtr player) const
+    {
+        int w = 1;
+        int h = 1;
+        if ((mx + 8) % constants::AMOUNT_PER_TILE)
+        {
+            w = 2;
+        }
+        if ((my + 8) % constants::AMOUNT_PER_TILE)
+        {
+            h = 2;
+        }
+        
+        int x = (mx+8) / constants::AMOUNT_PER_TILE - 1;
+        int y = (my+8) / constants::AMOUNT_PER_TILE - 1;
+        
+        for (int xpos = 0; xpos < w; xpos++)
+        {
+            for (int ypos = 0; ypos < h; ypos++)
+            {
+                int xx = xpos + x;
+                int yy = ypos + y;
+                
+                if (xx < 0 || xx >= iPresentMap->GetWidth() || yy < 0 || yy >= iPresentMap->GetHeight())
+                {
+                    return false;
+                }
+                
+                BOOST_FOREACH(auto ntt, iPresentMap->GetEntities(xx, yy))
+                {
+                    if (
+                        typeid(*ntt) != typeid(architecture::FloorTile) &&
+                        typeid(*ntt) != typeid(Umpire) &&
+                        typeid(*ntt) != typeid(bomberman::bonus::Bonus) &&
+                        ntt->id != player->id
+                        )
+                    {
+                        // ignore the bomb we are on
+                        if (typeid(*ntt) == typeid(arsenal::PropBomb) ||
+                            typeid(*ntt) == typeid(arsenal::Bomb))
+                        {
+                            if (ntt->mx == player->_bombPosX &&
+                                ntt->my == player->_bombPosY)
+                            {
+                                continue;
+                            }
+                        }
+                        
+                        // collision
+                        if (
+                            player->mx >= ntt->mx + constants::AMOUNT_PER_TILE &&
+                            player->mx + constants::AMOUNT_PER_TILE <= ntt->mx &&
+                            player->my >= ntt->my + constants::AMOUNT_PER_TILE &&
+                            player->my + constants::AMOUNT_PER_TILE <= ntt->my
+                            )
+                        {}
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return true;
+    }
+    
 	void Player::Evolve(const std::vector<InputState>& iInputs, uint32_t iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const
 	{
 		EvolutionRoutine(std::make_shared<Player>(*this), iInputs, iTimestamp, iPresentMap, iFutureMap);
@@ -279,8 +319,8 @@ namespace bestiary {
 		SDL_Rect dst;
 		dst.w = PLAYER_WIDTH;
 		dst.h = PLAYER_HEIGHT;
-		dst.x = x * TILE_WIDTH + mx * SUBTILE_WIDTH + MAP_X;
-		dst.y = y * TILE_WIDTH + my * SUBTILE_WIDTH + MAP_Y - (PLAYER_HEIGHT - TILE_HEIGHT);
+		dst.x = mx * SUBTILE_WIDTH + MAP_X;
+		dst.y = my * SUBTILE_WIDTH + MAP_Y - (PLAYER_HEIGHT - TILE_HEIGHT);
 
 		Render(iRenderer, dst);
 	}
@@ -361,6 +401,10 @@ namespace bestiary {
 		case Bonus::PROPBOMB:
 			_nbProBomb++;
 			break;
+                
+        case Bonus::REMOTEBOMB:
+            _nbRemoteBomb++;
+            break;
 		}
 		iBonus->NotifyConsumed();
 	  }

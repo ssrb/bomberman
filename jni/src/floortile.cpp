@@ -11,6 +11,7 @@ namespace architecture {
 	FloorTilePtr FloorTile::Create() 
 	{
 		auto floorTile = std::make_shared<FloorTile>();
+        floorTile->id = constants::FLOORID;
 		floorTile->zlevel = constants::FLOOR_ZLEVEL;
 		floorTile->elevel = constants::FLOOR_ELEVEL;
 		//_FloorTile = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/floor.png"), SDL_DestroyTexture);
@@ -29,8 +30,8 @@ namespace architecture {
 		SDL_Rect r;
 		r.w = TILE_WIDTH;
 		r.h = TILE_HEIGHT;
-		r.x = x * TILE_WIDTH + MAP_X;	// <- just for overscan
-		r.y = y * TILE_WIDTH + MAP_Y;
+		r.x = GetX() * TILE_WIDTH + MAP_X;	// <- just for overscan
+		r.y = GetY() * TILE_WIDTH + MAP_Y;
 
 		SDL_RenderCopy(iRenderer, _floorTile.get(), nullptr, &r);
 	}

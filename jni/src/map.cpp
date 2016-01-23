@@ -20,6 +20,7 @@ Map::Map(int w, int h) :
 	_map(boost::extents[_width][_height])
 {
 }
+    
 
 Map::PositionCheck Map::CheckPosition(int x, int y) const
 {
@@ -39,10 +40,6 @@ Map::PositionCheck Map::CheckPosition(int x, int y) const
 				else if (typeid(*ntt) == typeid(architecture::SoftBlock))
 				{
 					return SOFT_OCCUPIED;
-				}
-				else if (typeid(*ntt) == typeid(bonus::Bonus))
-				{
-					return FREE;
 				}
 				else
 				{
@@ -69,8 +66,13 @@ EntitySet &Map::GetEntities(int x, int y)
 
 bool Map::SetEntity(const EntityPtr &ntt)
 {
-	int x = ntt->x;
-	int y = ntt->y;
+    if (typeid(*ntt) == typeid(Umpire))
+    {
+        _umpire = ntt;
+    }
+    
+	int x = ntt->GetX();
+	int y = ntt->GetY();
 
 	if (CheckPosition(x, y) == BOUNDARY)
 	{
@@ -137,6 +139,5 @@ void Map::ForeachEntity(std::function<void(const EntityPtr &)> func)
 		}
 	});
 }
-
 
 }

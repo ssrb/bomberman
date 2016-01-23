@@ -42,6 +42,7 @@ namespace arsenal {
 
 	PropExplosionPtr PropExplosion::Create(int iCreationTime) {
 		auto explosion = std::make_shared<PropExplosion>();
+        explosion->id = constants::EXPLOSIONID;
 		explosion->_timeout = iCreationTime + kExplosionTimer;
 		explosion->_stage = 0;
 		explosion->zlevel = constants::EXPLOSION_ZLEVEL;
@@ -146,8 +147,8 @@ namespace arsenal {
 		SDL_Rect r;
 		r.w = TILE_WIDTH;
 		r.h = TILE_HEIGHT;
-		r.x = x * TILE_WIDTH + MAP_X;
-		r.y = y * TILE_WIDTH + MAP_Y;
+		r.x = GetX() * TILE_WIDTH + MAP_X;
+		r.y = GetY() * TILE_WIDTH + MAP_Y;
 		
 		SDL_RenderCopy(iRenderer, _explosion[_stage].get(), nullptr, &r);
 	}
@@ -158,42 +159,42 @@ namespace arsenal {
 	 	{
 	 		case IsoTropic:
 
- 				if (CanPropagate(iPresentMap, x + 1, y))
+ 				if (CanPropagate(iPresentMap, GetX() + 1, GetY()))
  				{
  					auto explosion = std::make_shared<PropExplosion>(*this);
  					explosion->active = true;
 				    explosion->_timeout = iTimestamp + kExplosionTimer;
-				    explosion->x = x + 1;
+				    explosion->SetX(GetX() + 1);
 				    explosion->_propagation = Right;
 				    iFutureMap->SetEntity(explosion);	  
  				}
 
- 				if (CanPropagate(iPresentMap, x - 1, y))
+ 				if (CanPropagate(iPresentMap, GetX() - 1, GetY()))
  				{
  					auto explosion = std::make_shared<PropExplosion>(*this);
  					explosion->active = true;
 				    explosion->_timeout = iTimestamp + kExplosionTimer;
-				    explosion->x = x - 1;
+				    explosion->SetX(GetX() - 1);
 				    explosion->_propagation = Left;
 				    iFutureMap->SetEntity(explosion);	  
  				}
 
-				if (CanPropagate(iPresentMap, x, y + 1))
+				if (CanPropagate(iPresentMap, GetX(), GetY() + 1))
  				{
  					auto explosion = std::make_shared<PropExplosion>(*this);
  					explosion->active = true;
 				    explosion->_timeout = iTimestamp + kExplosionTimer;
-				    explosion->y = y + 1;
+				    explosion->SetY(GetY() + 1);
 				    explosion->_propagation = Down;
 				    iFutureMap->SetEntity(explosion);	  
  				}
 
- 				if (CanPropagate(iPresentMap, x, y - 1))
+ 				if (CanPropagate(iPresentMap, GetX(), GetY() - 1))
  				{
  					auto explosion = std::make_shared<PropExplosion>(*this);
  					explosion->active = true;
 				    explosion->_timeout = iTimestamp + kExplosionTimer;
-				    explosion->y = y - 1;
+				    explosion->SetY(GetY() - 1);
 				    explosion->_propagation = Up;
 				    iFutureMap->SetEntity(explosion);	  
  				}
@@ -202,12 +203,12 @@ namespace arsenal {
 
 	 		case Up:
 
-	 			if (CanPropagate(iPresentMap, x, y - 1))
+	 			if (CanPropagate(iPresentMap, GetX(), GetY() - 1))
  				{
  					auto explosion = std::make_shared<PropExplosion>(*this);
  					explosion->active = true;
 				    explosion->_timeout = iTimestamp + kExplosionTimer;
-				    explosion->y = y - 1;
+				    explosion->SetY(GetY() - 1);
 				    explosion->_propagation = Up;
 				    iFutureMap->SetEntity(explosion);	  
  				}
@@ -216,12 +217,12 @@ namespace arsenal {
 
 	 		case Down:
 
-	 			if (CanPropagate(iPresentMap, x, y + 1))
+	 			if (CanPropagate(iPresentMap, GetX(), GetY() + 1))
  				{
  					auto explosion = std::make_shared<PropExplosion>(*this);
  					explosion->active = true;
 				    explosion->_timeout = iTimestamp + kExplosionTimer;
-				    explosion->y = y + 1;
+				    explosion->SetY(GetY() + 1);
 				    explosion->_propagation = Down;
 				    iFutureMap->SetEntity(explosion);	  
  				}
@@ -230,12 +231,12 @@ namespace arsenal {
 
 	 		case Left:
 
-				if (CanPropagate(iPresentMap, x - 1, y))
+				if (CanPropagate(iPresentMap, GetX() - 1, GetY()))
  				{
  					auto explosion = std::make_shared<PropExplosion>(*this);
  					explosion->active = true;
 				    explosion->_timeout = iTimestamp + kExplosionTimer;
-				    explosion->x = x - 1;
+				    explosion->SetX(GetX() - 1);
 				    explosion->_propagation = Left;
 				    iFutureMap->SetEntity(explosion);	  
  				}
@@ -244,12 +245,12 @@ namespace arsenal {
 
 	 		case Right:
 
-	 			if (CanPropagate(iPresentMap, x + 1, y))
+	 			if (CanPropagate(iPresentMap, GetX() + 1, GetY()))
  				{
  					auto explosion = std::make_shared<PropExplosion>(*this);
  					explosion->active = true;
 				    explosion->_timeout = iTimestamp + kExplosionTimer;
-				    explosion->x = x + 1;
+				    explosion->SetX(GetX() + 1);
 				    explosion->_propagation = Right;
 				    iFutureMap->SetEntity(explosion);	  
  				}

@@ -28,7 +28,7 @@ void PollEvents(std::vector<InputState> &oInputState);
 #ifdef ANDROID
 #include <jni.h>
 
-extern "C" void Java_net_astrobunny_aldebaran_BombermanSurface_onOuyaControllerKey(
+extern "C" void Java_net_tenforward_bomberman_BombermanSurface_onOuyaControllerKey(
                                                                JNIEnv* env, jclass jcls,
                                                                jint player, jint keyCode, jint action)
 {
@@ -79,31 +79,33 @@ void PollEvents(std::vector<InputState> &oInputState)
 {
 	SDL_Event e;
 
+	for (int i=0; i<4; i++)
+	for (auto keyIter = keyMap.begin(); keyIter != keyMap.end(); keyIter++)
+	{
+		oInputState[i].SetButtonPressed(keyIter->second, false);
+		oInputState[i].SetButtonReleased(keyIter->second, false);
+	}
+
+	while ( SDL_PollEvent(&e) )
+	{
 #ifdef ANDROID
 		auto inputState = &oInputState[e.jdevice.which];
 #else
 		auto inputState = &oInputState[0];
 #endif
 		
-	for (auto keyIter = keyMap.begin(); keyIter != keyMap.end(); keyIter++)
-	{
-		inputState->SetButtonPressed(keyIter->second, false);
-		inputState->SetButtonReleased(keyIter->second, false);
-	}
-
-	if ( SDL_PollEvent(&e) )
-	{
-
 		if (e.type == SDL_QUIT)
 		{
 			exit(0);
 		}
 		else if (e.type == SDL_FINGERUP)
-		{	
+		{
+            printlog("%d UP\n", e.tfinger.fingerId);
 			inputState->SetFingered(false);
 		}
 		else if (e.type == SDL_FINGERDOWN)
 		{
+            printlog("%d DOWN\n", e.tfinger.fingerId);
 			inputState->SetFingered(true);
 			inputState->SetFingerX(e.tfinger.x);
 			inputState->SetFingerY(e.tfinger.y);
@@ -131,6 +133,57 @@ void PollEvents(std::vector<InputState> &oInputState)
 
 void game()
 {
+    while (true) {
+		bomberman::PlayerConfigArray players;
+        
+		players[0].name = "Athos";
+		players[0].spriteName = "drawable/miku2.png";
+		players[0].present = true;
+		players[0].isComputer = false;
+		players[0].aiScript = "aiscripts/example.lua";
+        
+		players[1].name = "Porthos";
+		players[1].spriteName = "drawable/duckie.png";
+		players[1].present = true;
+		players[1].isComputer = true;
+		players[1].aiScript = "aiscripts/example.lua";
+        
+		players[2].name = "Aramis";
+		players[2].spriteName = "drawable/manji.png";
+		players[2].present = false;
+		players[2].isComputer = true;
+		players[2].aiScript = "aiscripts/example.lua";
+        
+		players[3].name = "D'Artagnan";
+		players[3].spriteName = "drawable/whitebbman.png";
+		players[3].present = false;
+		players[3].isComputer = true;
+		players[3].aiScript = "aiscripts/example.lua";
+		
+		
+		std::shared_ptr<bomberman::GameScene> ts(new bomberman::GameScene(players));
+		std::shared_ptr<bomberman::FadeScene> cover(new bomberman::FadeScene(ts));
+        
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+        std::shared_ptr<bomberman::TouchScreenKeyScene> coverTS(new bomberman::TouchScreenKeyScene(cover));
+        run(coverTS);
+#else
+		run(cover);
+#endif
+        
+		std::shared_ptr<bomberman::VictoryScene> vs(new bomberman::VictoryScene(ts->GetVictor()));
+		std::shared_ptr<bomberman::FadeScene> fs(new bomberman::FadeScene(vs));
+        
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+        std::shared_ptr<bomberman::TouchScreenKeyScene> vicTS(new bomberman::TouchScreenKeyScene(fs));
+        run(vicTS);
+#else
+		run(fs);
+#endif
+        
+
+    }
+    
 #ifdef PROGRAM_OPTIONS
 	// This is the game's options harness. We perform game testing here without having to go through
 	// the menus which are tedious
@@ -290,7 +343,7 @@ int main(int argc, char** argv)
 	int WIDTH = SCREEN_WIDTH, HEIGHT = SCREEN_HEIGHT;
 
 	printlog("Window size: %d x %d!\n", WIDTH, HEIGHT);
-
+    
 	// Create an application window with the following settings:
 	window = SDL_CreateWindow(
 		"Bomberman",                 
@@ -298,8 +351,10 @@ int main(int argc, char** argv)
 		SDL_WINDOWPOS_UNDEFINED,           
 		WIDTH,
 		HEIGHT,
-		SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL 
-	);		
+		SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL|SDL_WINDOW_ALLOW_HIGHDPI
+	);
+    
+    
 
 	// Check that the window was successfully made
 	if(window == NULL)

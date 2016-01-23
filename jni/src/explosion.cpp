@@ -24,6 +24,7 @@ namespace arsenal {
 
 	ExplosionPtr Explosion::Create(int iCreationTime, Orientation orientation) {
 		auto explosion = std::make_shared<Explosion>();
+        explosion->id = constants::EXPLOSIONID;
 		explosion->_timeout = iCreationTime + kExplosionTimer;
 		explosion->_stage = 0;
 		explosion->zlevel = constants::EXPLOSION_ZLEVEL;
@@ -107,8 +108,8 @@ namespace arsenal {
 		SDL_Rect r;
 		r.w = TILE_WIDTH;
 		r.h = TILE_HEIGHT;
-		r.x = x * TILE_WIDTH + MAP_X;
-		r.y = y * TILE_WIDTH + MAP_Y;
+		r.x = GetX() * TILE_WIDTH + MAP_X;
+		r.y = GetY() * TILE_WIDTH + MAP_Y;
 		
 		SDL_RenderCopy(iRenderer, _explosion.get(), &srcRect, &r);
 	}

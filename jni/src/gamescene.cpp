@@ -14,6 +14,8 @@
 #include "umpire.hpp"
 #include "resourcemanager.hpp"
 
+#include <iomanip>
+
 //SDL
 #include <SDL_image.h>
 
@@ -38,16 +40,22 @@ GameScene::GameScene(const PlayerConfigArray &playerConfig) :
 	_music(Mix_LoadMUS("music/premonition.flac"), Mix_FreeMusic),
 	_presentMap(new Map(MAP_COLUMNS, MAP_ROWS)),
 	_playerConfig(playerConfig),
-	_pastMaps(1024),
-	_font(utils::LoadFont("drawable/Gamegirl.ttf", 64))
+	_pastMaps(10),
+	_font(utils::LoadFont("drawable/Gamegirl.ttf", 40))
+    
 {
+    
+	if(!_music)
+	{
+		printlog("Mix_LoadMUS: %s\n", Mix_GetError());
+	}
 }
 
 void GameScene::Init(SDL_Window* window, SDL_Renderer* renderer)
 {
-	_running = true;
+    _running = true;
 
-	if(Mix_PlayMusic(_music.get(), -1) == -1)
+	//if(Mix_PlayMusic(_music.get(), -1) == -1)
 	{
 		printlog("Mix_PlayMusic: %s\n", Mix_GetError());
 	}
@@ -86,15 +94,15 @@ void GameScene::InitPlayers(SDL_Renderer* renderer)
 			if (_playerConfig[i].isComputer)
 			{
 				auto player = Computer::Create(id,_playerConfig[i].name, _playerConfig[i].spriteName, _playerConfig[i].aiScript, i, renderer);
-				player->x = pos[i].x;
-				player->y = pos[i].y;		
+				player->SetX(pos[i].x);
+				player->SetY(pos[i].y);
 				_presentMap->SetEntity(player);
 			}
 			else
 			{
 				auto player = Player::Create(id, _playerConfig[i].name, _playerConfig[i].spriteName, i, renderer);
-				player->x = pos[i].x;
-				player->y = pos[i].y;
+                player->SetX(pos[i].x);
+				player->SetY(pos[i].y);
 				_presentMap->SetEntity(player);
 			}
 			umpire->NotifyPlayerBorn(id);
@@ -122,12 +130,10 @@ void GameScene::InitBlocks(SDL_Renderer* renderer)
 		{
 		 	blockEntity = FloorTile::Create();
 		}
-		blockEntity->x = x;
-		blockEntity->y = y;
+		blockEntity->SetX(x);
+		blockEntity->SetY(y);
 		_presentMap->SetEntity(blockEntity);
 	});
-	
-	srand(1);
 
 	for (int i=0; i < 100; i++)
 	{
@@ -147,8 +153,8 @@ void GameScene::InitBlocks(SDL_Renderer* renderer)
 		if (_presentMap->CheckPosition(x,y) == Map::FREE)
 		{
 			auto softblock = SoftBlock::Create(0.8);
-			softblock->x = x;
-			softblock->y = y;
+			softblock->SetX(x);
+			softblock->SetY(y);
 			_presentMap->SetEntity(softblock);
 		}
 	}
@@ -156,7 +162,6 @@ void GameScene::InitBlocks(SDL_Renderer* renderer)
 
 void GameScene::Update(const std::vector<InputState>& inputs, uint32_t now)
 {
-
 	if (inputs[0].GetButtonState(InputState::START)) 
 	{
 		return BackThroughTime();
@@ -212,6 +217,8 @@ void GameScene::Update(const std::vector<InputState>& inputs, uint32_t now)
 
 void GameScene::Render(SDL_Renderer *renderer)
 {
+
+        
 	SDL_Rect safeArea = bomberman::utils::GetSafeArea1920();
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	SDL_RenderDrawRect(renderer, &safeArea);
@@ -244,9 +251,9 @@ void GameScene::Render(SDL_Renderer *renderer)
 	{
 		bool bomb = typeid(*left) == typeid(Bomb) || typeid(*left) == typeid(PropBomb);
 		return left->zlevel == right->zlevel ? 
-					(left->y == right->y ? 	
+					(left->GetY() == right->GetY() ?
 						bomb && typeid(*right) == typeid(Player) 
-					: 	left->y < right->y)
+					: 	left->GetY() < right->GetY())
 				: 	left->zlevel < right->zlevel;
 	});
 
@@ -257,6 +264,7 @@ void GameScene::Render(SDL_Renderer *renderer)
 			entity->Render(renderer);
 		}
 	}
+    
 }
 
 void GameScene::RenderPlayerDashBoard(const PlayerPtr &iPlayer, int pos, SDL_Renderer* renderer)
@@ -267,8 +275,8 @@ void GameScene::RenderPlayerDashBoard(const PlayerPtr &iPlayer, int pos, SDL_Ren
 	dashboard.x = PLAYER_DASHBOARD_X + pos * (dashboard.w + PLAYER_DASHBOARD_PADDING);
 	dashboard.y = PLAYER_DASHBOARD_Y;
 
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	SDL_RenderDrawRect(renderer, &dashboard);
+	//SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	//SDL_RenderDrawRect(renderer, &dashboard);
 
 	SDL_Rect avatar;
 	avatar.w = PLAYER_WIDTH;
@@ -282,7 +290,7 @@ void GameScene::RenderPlayerDashBoard(const PlayerPtr &iPlayer, int pos, SDL_Ren
 
 	auto font = ResourceManager::GetSingleton()->GetFont("drawable/Gamegirl.ttf", 64);
 	std::stringstream ss;
-	ss << "Bx" << (iPlayer->GetAllowedNumberOfBombs() - umpire->GetBombCount(iPlayer->id));
+	ss << std::setw( 2 ) << std::setfill( '0' ) << (iPlayer->GetAllowedNumberOfBombs() - umpire->GetBombCount(iPlayer->id));
 	auto nbBombsImg = utils::DrawString(renderer, _font, ss.str(), utils::MakeColor(0xffffffff));
 
 	SDL_Rect nbBombsRect;

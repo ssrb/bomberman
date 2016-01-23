@@ -8,7 +8,3 @@ endif
 
 run: all
 	cd assets && ./bomberman
-	
-android:
-	ndk-build
-	ant debug

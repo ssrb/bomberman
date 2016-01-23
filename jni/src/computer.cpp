@@ -1,10 +1,23 @@
 #include "computer.hpp"
 
+#include <fstream>
+
 namespace bomberman {
 namespace bestiary {
 
 	ComputerPtr Computer::Create(PlayerId id, const std::string &iName, const std::string &iSpriteName, const std::string &iAiScript, int iInputStateIdx, SDL_Renderer* iRenderer)
 	{
+#ifdef ANDROID_TEST_SCRIPT
+		std::ifstream in(iAiScript, std::ios::in | std::ios::binary);
+		std::string contents;
+		in.seekg(0, std::ios::end);
+		contents.resize(in.tellg());
+		in.seekg(0, std::ios::beg);
+		in.read(&contents[0], contents.size());
+		in.close();
+		std::string script = contents;
+
+#else 
 		SDL_RWops *rw = SDL_RWFromFile(iAiScript.c_str(), "r");
 
 		auto size = rw->size(rw);
@@ -13,7 +26,9 @@ namespace bestiary {
 		rw->read(rw, script, sizeof(char), size);
 		SDL_FreeRW(rw);
 
-		ScriptAPI sa(script);
+#endif
+
+		std::shared_ptr<ScriptAPI> sa(new ScriptAPI(script));
 
 		auto player = std::make_shared<Computer>(sa);
 		player->id = id;
@@ -29,12 +44,14 @@ namespace bestiary {
 		player->_availableBombs = 1;
 		player->_bombStrength = 2;
 
+#ifndef ANDROID_TEST_SCRIPT
 		delete[] script;
+#endif
 
 		return player;
 	}
 
-	Computer::Computer(ScriptAPI script) : 
+	Computer::Computer(std::shared_ptr<ScriptAPI> script) :
 		_script(script)
 	{
 	}
@@ -45,7 +62,8 @@ namespace bestiary {
 
 		if (_nextUpdateDueTime < iTimestamp)
 		{
-			inputs[_inputStateIdx] = _script.Resume(x, y, mx, my, iPresentMap);
+            // TODO only pass x y
+			inputs[_inputStateIdx] = _script->Resume(GetX(), GetY(), mx, my, iPresentMap);
 		}
 	
 		EvolutionRoutine(std::make_shared<Computer>(*this), inputs, iTimestamp, iPresentMap, iFutureMap);

@@ -1,4 +1,4 @@
-package net.astrobunny.aldebaran;
+package net.tenforward.bomberman;
 
 import org.libsdl.app.SDLActivity;
 import tv.ouya.console.api.OuyaController;
@@ -15,7 +15,7 @@ public class BombermanActivity extends SDLActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	OuyaController.init(this);
+    	//OuyaController.init(this);
 		mLayout.removeAllViews();
 		mSurface = new BombermanSurface(getApplication());
 		mLayout.addView(mSurface);

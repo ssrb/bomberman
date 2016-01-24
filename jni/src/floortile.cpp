@@ -1,9 +1,12 @@
 #include "floortile.hpp"
 #include "constants_resolution.hpp"
 #include "constants_game.hpp"
+#include "resourcemanager.hpp"
 
 // SDL
 #include <SDL_image.h>
+
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace architecture {
@@ -14,7 +17,7 @@ namespace architecture {
         floorTile->id = constants::FLOORID;
 		floorTile->zlevel = constants::FLOOR_ZLEVEL;
 		floorTile->elevel = constants::FLOOR_ELEVEL;
-		//_FloorTile = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/floor.png"), SDL_DestroyTexture);
+		floorTile->_floorTile = ResourceManager::GetSingleton()->GetTexture("drawable/floor.png");
 		return floorTile;
 	}
 

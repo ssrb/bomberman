@@ -7,6 +7,7 @@
 #include "computer.hpp"
 #include "constants_resolution.hpp"
 #include "constants_game.hpp"
+#include "resourcemanager.hpp"
 
 // SDL
 #include <SDL_image.h>
@@ -14,6 +15,7 @@
 
 using bomberman::architecture::Block;
 using bomberman::architecture::SoftBlock;
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace arsenal {
@@ -48,16 +50,14 @@ namespace arsenal {
 		explosion->zlevel = constants::EXPLOSION_ZLEVEL;
 		explosion->_propagation = IsoTropic;
 		explosion->_willPropagate = true;
+
+		explosion->_explosion[0] = ResourceManager::GetSingleton()->GetTexture("drawable/explosion1.png");
+		explosion->_explosion[1] = ResourceManager::GetSingleton()->GetTexture("drawable/explosion2.png");
+		explosion->_explosion[2] = ResourceManager::GetSingleton()->GetTexture("drawable/explosion3.png");
+		explosion->_explosion[3] = ResourceManager::GetSingleton()->GetTexture("drawable/explosion4.png");
+
 		return explosion;
 	}
-
-	// void PropExplosion::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	// {
-	// 	_Explosion[0] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion1.png"), SDL_DestroyTexture);
-	// 	_Explosion[1] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion2.png"), SDL_DestroyTexture);
-	// 	_Explosion[2] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion3.png"), SDL_DestroyTexture);
-	// 	_Explosion[3] = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/explosion4.png"), SDL_DestroyTexture);
-	// }
 
 	void PropExplosion::Evolve(const std::vector<InputState>& /*iInputs*/, Uint32 iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const
 	{

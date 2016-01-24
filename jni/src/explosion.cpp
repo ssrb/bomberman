@@ -7,6 +7,7 @@
 #include "computer.hpp"
 #include "constants_resolution.hpp"
 #include "constants_game.hpp"
+#include "resourcemanager.hpp"
 
 // SDL
 #include <SDL_image.h>
@@ -14,6 +15,7 @@
 
 using bomberman::architecture::Block;
 using bomberman::architecture::SoftBlock;
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace arsenal {
@@ -29,7 +31,7 @@ namespace arsenal {
 		explosion->_stage = 0;
 		explosion->zlevel = constants::EXPLOSION_ZLEVEL;
 		explosion->_orientation = orientation;
-		//_Explosion = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/flare.png"), SDL_DestroyTexture);
+		explosion->_explosion = ResourceManager::GetSingleton()->GetTexture("drawable/flare.png");
 		return explosion;
 	}
 

@@ -10,7 +10,8 @@
 #include "umpire.hpp"
 #include "printlog.hpp"
 #include "floortile.hpp"
-	
+#include "resourcemanager.hpp"
+
 // SDL
 #include <SDL.h>
 #include <SDL_image.h>
@@ -21,6 +22,7 @@ using bomberman::arsenal::PropBomb;
 using bomberman::architecture::Block;
 using bomberman::architecture::SoftBlock;
 using bomberman::bonus::Bonus;
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace bestiary {
@@ -50,26 +52,11 @@ namespace bestiary {
 		player->_bombStrength = 2;
         player->_bombPosX = -1000;
         player->_bombPosY = -1000;
+        player->_bomberman = ResourceManager::GetSingleton()->GetTexture(iSpriteName.c_str(), 0x00ff00);
+        player->_bombPlaceSound = ResourceManager::GetSingleton()->GetMixChunk("sound/bombplace.wav");
 		return player;
 	}
-
-	// void Player::InitializeGraphicRessources(SDL_Renderer *iRenderer) 
-	// {
-	// 	auto surface = IMG_Load(_spriteName.c_str());
-	// 	SDL_SetColorKey(surface, SDL_TRUE, 0x00ff00);
-	// 	_Bomberman = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(iRenderer, surface), SDL_DestroyTexture);
-	// 	SDL_FreeSurface(surface);
-
-	// 	if (!_bombPlaceSound)
-	// 	{
-	// 		_bombPlaceSound = std::shared_ptr<Mix_Chunk>(Mix_LoadWAV("sound/bombplace.wav"), Mix_FreeChunk);
-	// 		if (!_bombPlaceSound)
-	// 		{
-	// 			printlog("Mix_LoadWAV: %s\n", Mix_GetError());
-	// 		}
-	// 	}
-	// }
-	
+		
 	void Player::EvolutionRoutine(const PlayerPtr &player, const std::vector<InputState>& iInputs, uint32_t iTimestamp, const MapConstPtr &iPresentMap, const MapPtr &iFutureMap) const
 	{
 		auto umpire = std::static_pointer_cast<Umpire>(iFutureMap->GetEntity(constants::UMPIRE));

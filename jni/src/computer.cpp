@@ -1,6 +1,9 @@
 #include "computer.hpp"
+#include "resourcemanager.hpp"
 
 #include <fstream>
+
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace bestiary {
@@ -43,6 +46,9 @@ namespace bestiary {
 		player->_nbProBomb = 0;
 		player->_availableBombs = 1;
 		player->_bombStrength = 2;
+
+		player->_bomberman = ResourceManager::GetSingleton()->GetTexture(iSpriteName.c_str(), 0x00ff00);
+        player->_bombPlaceSound = ResourceManager::GetSingleton()->GetMixChunk("sound/bombplace.wav");
 
 #ifndef ANDROID_TEST_SCRIPT
 		delete[] script;

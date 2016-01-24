@@ -54,7 +54,7 @@ void GameScene::Init(SDL_Window* window, SDL_Renderer* renderer)
 {
     _running = true;
 
-	//if(Mix_PlayMusic(_music.get(), -1) == -1)
+	if(Mix_PlayMusic(_music.get(), -1) == -1)
 	{
 		printlog("Mix_PlayMusic: %s\n", Mix_GetError());
 	}

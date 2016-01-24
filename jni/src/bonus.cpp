@@ -2,10 +2,15 @@
 #include "constants_game.hpp"
 #include "constants_resolution.hpp"
 #include "printlog.hpp"
+#include "resourcemanager.hpp"
+
+// STL, libstdc++
 #include <array>
 
 // SDL
 #include <SDL_image.h>
+
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace bonus {
@@ -36,9 +41,9 @@ namespace bonus {
 			}
 		}
 
-		// _BonusTexture.insert(std::make_pair(Bonus::PROPBOMB, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/propbombbonus.png"), SDL_DestroyTexture)));
-		// _BonusTexture.insert(std::make_pair(Bonus::BOMBCOUNT, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/bombbonus.png"), SDL_DestroyTexture)));
-		// _BonusTexture.insert(std::make_pair(Bonus::BOMBSTRENGTH, std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/firebonus.png"), SDL_DestroyTexture)));
+		 bonus->_bonusTexture.insert(std::make_pair(Bonus::PROPBOMB, ResourceManager::GetSingleton()->GetTexture("drawable/propbombbonus.png")));
+		 bonus->_bonusTexture.insert(std::make_pair(Bonus::BOMBCOUNT, ResourceManager::GetSingleton()->GetTexture("drawable/bombbonus.png")));
+		 bonus->_bonusTexture.insert(std::make_pair(Bonus::BOMBSTRENGTH, ResourceManager::GetSingleton()->GetTexture("drawable/firebonus.png")));
 
 		return bonus;
 	}

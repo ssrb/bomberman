@@ -2,11 +2,13 @@
 #include "constants_resolution.hpp"
 #include "constants_game.hpp"
 #include "bonus.hpp"
+#include "resourcemanager.hpp"
 
 // SDL
 #include <SDL_image.h>
 
 using bomberman::bonus::Bonus;
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace architecture {
@@ -19,7 +21,7 @@ namespace architecture {
 		block->elevel = constants::SOFTBLOCK_ELEVEL;
 		block->isAlive = true;
 		block->_bonusProbability = iBonusProbability;
-		//_SoftBlock = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/softblock.png"), SDL_DestroyTexture);
+		block->_softBlock = ResourceManager::GetSingleton()->GetTexture("drawable/softblock.png");	
 		return block;
 	}
 

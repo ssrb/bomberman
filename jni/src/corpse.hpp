@@ -27,7 +27,7 @@ namespace bestiary {
 			int _frameId;
 			Uint32 _nextFrameDueTime;
 			Uint32 _nextUpdateDueTime;
-			std::shared_ptr<SDL_Texture> _BombermanCorpse;
+			std::shared_ptr<SDL_Texture> _bombermanCorpse;
 	};
 }
 }

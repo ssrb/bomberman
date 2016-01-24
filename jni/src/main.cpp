@@ -133,6 +133,31 @@ void PollEvents(std::vector<InputState> &oInputState)
 
 void game()
 {
+	// This is where the game's storyboard is encoded
+	while (true)
+	{
+		std::shared_ptr<bomberman::MenuScene> menuScene(new bomberman::MenuScene());
+		run(menuScene);
+
+		if (menuScene->GetSelection() == bomberman::MenuScene::NEWGAME)
+		{
+
+			std::shared_ptr<bomberman::SetupScene> setupScene(new bomberman::SetupScene());
+			run(setupScene);
+			
+			std::shared_ptr<bomberman::GameScene> ts(new bomberman::GameScene(setupScene->GetConfig()));
+			std::shared_ptr<bomberman::FadeScene> cover(new bomberman::FadeScene(ts));
+			run(cover);
+
+			std::shared_ptr<bomberman::VictoryScene> vs(new bomberman::VictoryScene(ts->GetVictor()));
+			std::shared_ptr<bomberman::FadeScene> fs(new bomberman::FadeScene(vs));
+			run(fs);
+		}
+		else
+		{
+		}
+	}
+	
     while (true) {
 		bomberman::PlayerConfigArray players;
         
@@ -243,31 +268,6 @@ void game()
 		return;
 	}
 #endif // PROGRAM_OPTIONS
-
-	// This is where the game's storyboard is encoded
-	while (true)
-	{
-		std::shared_ptr<bomberman::MenuScene> menuScene(new bomberman::MenuScene());
-		run(menuScene);
-
-		if (menuScene->GetSelection() == bomberman::MenuScene::NEWGAME)
-		{
-
-			std::shared_ptr<bomberman::SetupScene> setupScene(new bomberman::SetupScene());
-			run(setupScene);
-			
-			std::shared_ptr<bomberman::GameScene> ts(new bomberman::GameScene(setupScene->GetConfig()));
-			std::shared_ptr<bomberman::FadeScene> cover(new bomberman::FadeScene(ts));
-			run(cover);
-
-			std::shared_ptr<bomberman::VictoryScene> vs(new bomberman::VictoryScene(ts->GetVictor()));
-			std::shared_ptr<bomberman::FadeScene> fs(new bomberman::FadeScene(vs));
-			run(fs);
-		}
-		else
-		{
-		}
-	}
 }
 
 int main(int argc, char** argv)

@@ -23,7 +23,7 @@ namespace bestiary {
 	{
 		auto corpse = std::make_shared<Corpse>();
 		corpse->_frameId = 0;
-		corpse->_BombermanCorpse = corpseSprite;
+		corpse->_bombermanCorpse = corpseSprite;
 
 		corpse->zlevel = constants::CORPSE_ZLEVEL;
 		corpse->_frameId = 0;
@@ -81,7 +81,7 @@ namespace bestiary {
 		dst.x = mx * SUBTILE_WIDTH + MAP_X - (src[_frameId].w * SPRITE_MAGNIFICATION - TILE_WIDTH) / 2;
 		dst.y = my * SUBTILE_WIDTH + MAP_Y - (PLAYER_HEIGHT - TILE_HEIGHT);
 
-		SDL_RenderCopy(iRenderer, _BombermanCorpse.get(), &src[_frameId], &dst);
+		SDL_RenderCopy(iRenderer, _bombermanCorpse.get(), &src[_frameId], &dst);
 	}
 
 }

@@ -23,6 +23,7 @@ namespace resources {
 				return _Singleton;
 			}
 			std::shared_ptr<SDL_Texture> GetTexture(const std::string &filename) const;
+			std::shared_ptr<SDL_Texture> GetTexture(const std::string &filename, uint32_t colorKey) const;
 			std::shared_ptr<TTF_Font> GetFont(const std::string &fontName, int ptSize) const;
 			std::shared_ptr<Mix_Chunk> GetMixChunk(const std::string &audioFile) const;
 		private:

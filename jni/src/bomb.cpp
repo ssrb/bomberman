@@ -62,7 +62,7 @@ namespace arsenal {
 		bomb->_frameId = 0;
 		bomb->_nextFrameDueTime = 0;
 		bomb->_playerId = iPlayerId;
-		bomb->_bomb = ResourceManager::GetSingleton()->GetTexture("test/bomb.png");
+		bomb->_bomb = ResourceManager::GetSingleton()->GetTexture("drawable/bomb.png");
 		bomb->_explosionSound = ResourceManager::GetSingleton()->GetMixChunk("sound/explosion.wav");
 		return bomb;
 	}

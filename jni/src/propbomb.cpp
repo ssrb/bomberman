@@ -3,9 +3,12 @@
 #include "constants_resolution.hpp"
 #include "constants_game.hpp"
 #include "umpire.hpp"
+#include "resourcemanager.hpp"
 
 // SDL
 #include <SDL_image.h>
+
+using bomberman::resources::ResourceManager;
 
 namespace bomberman {
 namespace arsenal {
@@ -20,7 +23,7 @@ namespace arsenal {
 		bomb->_frameId = 0;
 		bomb->_nextFrameDueTime = 0;
 		bomb->_playerId = iPlayerId;
-		//_Bomb = std::shared_ptr<SDL_Texture>(IMG_LoadTexture(iRenderer, "drawable/propbomb.png"), SDL_DestroyTexture);
+		bomb->_bomb = ResourceManager::GetSingleton()->GetTexture("drawable/propbomb.png");
 		return bomb;
 	}
 

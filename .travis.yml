@@ -1,10 +1,7 @@
-language: java cpp
+language: cpp
 rvm:  
     - 2.0.0
 env:
-  matrix:
-#    - THE_MAKEFILE=Makefile.android
-    - THE_MAKEFILE=Makefile
   global:
     - ARTIFACTS_AWS_REGION=us-east-1
     - ARTIFACTS_S3_BUCKET=bomberman.ten-forward
@@ -12,14 +9,9 @@ env:
 #  - secure: "mhr46ugNFBF/8Vlu8NgPHw5WFV97QzpFzFTOGiaHzp2daYgnAvSKrqmlZ3dCb9fMjPsFFev+XIgybJhpPKSl5yIPu8HvlNPCtyIM8fdAo0Fb00O8dEdWX/ijUTQvLKs9U8dSGPpx98PHzxepSLmEkaUqHtvqCyZE9CA6kPdkq8A="
 before_install:
   - git submodule update --init --recursive
-
-install:
-  - export ANDROID_HOME=$(pwd)/android-sdk-linux 
-  - ./provision.sh
-
 before_script:
   - gem install travis-artifacts
 script:
-  - make -j 5 -f $THE_MAKEFILE all
+  - echo ""
 #after_success:
 #  - if [ $TRAVIS_REPO_SLUG = ssrb/bomberman ] && [ $THE_MAKEFILE = Makefile.android ]; then travis-artifacts upload --path bin/Bomberman-debug.apk; fi

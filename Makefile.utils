@@ -1,7 +1,0 @@
-eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
-
-ifeq ($(PLATFORM), MACOSX)
-  EXTENSION=dylib
-else
-  EXTENSION=so
-endif

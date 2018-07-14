@@ -1,3 +1,0 @@
-CXX=gcc
-EXTRA_CFLAGS=-std=c++0x
--include Makefile.common

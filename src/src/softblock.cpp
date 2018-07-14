@@ -1,0 +1,63 @@
+#include "softblock.hpp"
+#include "constants_resolution.hpp"
+#include "constants_game.hpp"
+#include "bonus.hpp"
+#include "resourcemanager.hpp"
+
+// SDL
+#include <SDL_image.h>
+
+using bomberman::bonus::Bonus;
+using bomberman::resources::ResourceManager;
+
+namespace bomberman {
+namespace architecture {
+
+	SoftBlockPtr SoftBlock::Create(double iBonusProbability) 
+	{
+		auto block = std::make_shared<SoftBlock>();
+        block->id = constants::SOFTBLOCKID;
+		block->zlevel = constants::BLOCK_ZLEVEL;
+		block->elevel = constants::SOFTBLOCK_ELEVEL;
+		block->isAlive = true;
+		block->_bonusProbability = iBonusProbability;
+		block->_softBlock = ResourceManager::GetSingleton()->GetTexture("drawable/softblock.png");	
+		return block;
+	}
+
+	void SoftBlock::Evolve(const std::vector<InputState>& /*iInputs*/, uint32_t /*iTimestamp*/, const MapConstPtr &/*iPresentMap*/, const MapPtr &iFutureMap) const
+	{
+		if (!isAlive)
+		{
+			if (rand() < RAND_MAX * _bonusProbability) 
+			{
+				auto bonus = Bonus::Create();
+				bonus->SetX(GetX());
+				bonus->SetY(GetY());
+				iFutureMap->SetEntity(bonus);
+			}
+			return;
+		}
+
+		iFutureMap->SetEntity(std::make_shared<SoftBlock>(*this));
+	}
+
+	void SoftBlock::Render(SDL_Renderer *iRenderer) const 
+	{
+		using namespace bomberman::constants;
+		
+		SDL_Rect r;
+		r.w = TILE_WIDTH;
+		r.h = TILE_HEIGHT;
+		r.x = GetX() * TILE_WIDTH + MAP_X;	// <- just for overscan
+		r.y = GetY() * TILE_WIDTH + MAP_Y;
+		
+		SDL_RenderCopy(iRenderer, _softBlock.get(), nullptr, &r);
+	}
+
+	void SoftBlock::Kill()
+	{
+		isAlive = false;
+	}
+}
+}

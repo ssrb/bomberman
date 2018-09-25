@@ -65,20 +65,12 @@ set (BOMBERMAN_PRIVATE_HEADERS
     "src/softblock.hpp"
 )
 
-set (BOMBERMAN_PUBLIC_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include)
-
-set (BOMBERMAN_PUBLIC_HEADERS
-        "include/8iTurboVideo/turbovideo_decodeErr.h"
-        "include/8iTurboVideo/turbovideo_sdk.h"
-    )
-
-
-add_library(${PROJECT_NAME} STATIC ${TURBOVIDEOLIB_SOURCES} ${TURBOVIDEOLIB_PRIVATE_HEADERS} ${TURBOVIDEOLIB_PUBLIC_HEADERS})
+add_executable(${PROJECT_NAME} ${BOMBERMAN_SOURCES} ${BOMBERMAN_PRIVATE_HEADERS})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
-set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-target_include_directories(${PROJECT_NAME} PUBLIC
-                            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-                            $<INSTALL_INTERFACE:include> )
-
-install(EXPORT 8iTurboVideo-targets DESTINATION ${TURBOVIDEO_CONFIG_INSTALL_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/boost")
+target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/SDL/include")
+target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/SDL_image")
+target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/SDL_mixer")
+target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/SDL_ttf")
+target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/luacppinterface/LuaCppInterface")
+target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/luacppinterface/lua/src")

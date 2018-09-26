@@ -15,8 +15,8 @@ script:
   - pushd thirdparty/SDL
   - mkdir build
   - cd build
-  - cmake ..
-  - make DESTDIR=../../build all install
+  - cmake -DCMAKE_INSTALL_PREFIX:PATH=../../build ..
+  - make -j 4 all install
   - popd
   - pushd thirdparty/SDL_image
   - mkdir build

@@ -16,7 +16,8 @@ script:
   - mkdir build
   - cd build
   - cmake ..
-  - make
+  - make all install
   - popd
+  - pushd thirdparty/SDL
 #after_success:
 #  - if [ $TRAVIS_REPO_SLUG = ssrb/bomberman ] && [ $THE_MAKEFILE = Makefile.android ]; then travis-artifacts upload --path bin/Bomberman-debug.apk; fi

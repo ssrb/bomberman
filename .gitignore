@@ -1,4 +1,4 @@
-assets/bomberman
+*/build
 
 # Compiled Object files
 *.slo
@@ -28,3 +28,4 @@ assets/bomberman
 *.exe
 *.out
 *.app
+thirdparty/build/include/SDL2/SDL_gesture.h

@@ -20,7 +20,7 @@ script:
   - popd
   - pushd thirdparty/SDL_image
   - ./autogen.sh
-  - ./configure --prefix $PWD/../build
+  - CPPFLAGS=-I$PWD/../build/include/SDL2 LDFLAGS=-L$PWD/../build/lib ./configure --prefix $PWD/../build
   - make -j 4 all install
   - popd
   - pushd thirdparty/SDL_mixer

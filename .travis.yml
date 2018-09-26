@@ -20,7 +20,7 @@ script:
   - popd
   - pushd thirdparty/SDL_image
   - ./autogen.sh
-  - ./configure --prefix ../../build
+  - ./configure --prefix $PWD/../build
   - make -j 4 all install
   - popd
   - pushd thirdparty/SDL_mixer

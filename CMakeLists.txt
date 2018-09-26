@@ -65,12 +65,18 @@ set (BOMBERMAN_PRIVATE_HEADERS
     "src/softblock.hpp"
 )
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_mixer REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+
 add_executable(${PROJECT_NAME} ${BOMBERMAN_SOURCES} ${BOMBERMAN_PRIVATE_HEADERS})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
 target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/boost")
-target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/SDL/include")
-target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/SDL_image")
-target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/SDL_mixer")
-target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/SDL_ttf")
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_MIXER_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_TTF_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/luacppinterface/LuaCppInterface")
 target_include_directories(${PROJECT_NAME} PRIVATE "thirdparty/luacppinterface/lua/src")

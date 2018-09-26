@@ -19,10 +19,8 @@ script:
   - make -j 4 all install
   - popd
   - pushd thirdparty/SDL_image
-  - cp ../cmake/SDL_image.cmake CMakeList.txt
-  - mkdir build
-  - cd build
-  - cmake -DCMAKE_INSTALL_PREFIX:PATH=../../build ..
+  - ./autogen.sh
+  - ./configure --prefix ../../build
   - make -j 4 all install
   - popd
   - pushd thirdparty/SDL_mixer

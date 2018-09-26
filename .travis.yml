@@ -19,16 +19,25 @@ script:
   - make -j 4 all install
   - popd
   - pushd thirdparty/SDL_image
+  - cp ../cmake/SDL_image.cmake CMakeList.txt
   - mkdir build
   - cd build
+  - cmake -DCMAKE_INSTALL_PREFIX:PATH=../../build ..
+  - make -j 4 all install
   - popd
   - pushd thirdparty/SDL_mixer
+  - cp ../cmake/SDL_mixer.cmake CMakeList.txt
   - mkdir build
   - cd build
+  - cmake -DCMAKE_INSTALL_PREFIX:PATH=../../build ..
+  - make -j 4 all install
   - popd
   - pushd thirdparty/SDL_ttf
+  - cp ../cmake/SDL_ttf.cmake CMakeList.txt
   - mkdir build
   - cd build
+  - cmake -DCMAKE_INSTALL_PREFIX:PATH=../../build ..
+  - make -j 4 all install
   - popd
 #after_success:
 #  - if [ $TRAVIS_REPO_SLUG = ssrb/bomberman ] && [ $THE_MAKEFILE = Makefile.android ]; then travis-artifacts upload --path bin/Bomberman-debug.apk; fi

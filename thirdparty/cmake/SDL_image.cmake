@@ -2,6 +2,27 @@ cmake_minimum_required(VERSION 3.8)
 
 project(SDL_image VERSION 1.0.0.0 LANGUAGES C CXX)
 
+#LOAD_BMP
+#LOAD_GIF
+#LOAD_JPG
+#LOAD_JPG_DYNAMIC="libjpeg-9.dll"
+#LOAD_LBM
+#LOAD_PCX
+#LOAD_PNG
+#LOAD_PNG_DYNAMIC="libpng16-16.dll"
+#LOAD_PNM
+#LOAD_SVG
+#LOAD_TGA
+#LOAD_TIF
+#LOAD_TIF_DYNAMIC="libtiff-5.dll"
+#LOAD_WEBP
+#LOAD_WEBP_DYNAMIC="libwebp-7.dll"
+#LOAD_XPM
+#LOAD_XV
+#PNG_USE_DLL
+#ZLIB_DLL
+
+
 set (SDL_image_SOURCES
     "IMG_bmp.c"
     "IMG_gif.c"
@@ -31,9 +52,7 @@ set (SDL_image_PUBLIC_HEADERS
     "SDL_image.h"
 )
 
-set (ShowImage_SOURCES
-    "showimage.c"
-)
+
 
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_SOURCE_DIR}/../build/cmake")
@@ -45,4 +64,9 @@ add_library(${PROJECT_NAME} SHARED ${SDL_image_SOURCES} ${SDL_image_PRIVATE_HEAD
 target_include_directories(${PROJECT_NAME} PRIVATE SDL2::SDL2)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
 
-#add_executable("showimage" ${ShowImage_SOURCES})
+set (showimage_SOURCES
+    "showimage.c"
+)
+
+add_executable(showimage ${showimage_SOURCES})
+target_link_libraries(showimage PRIVATE ${PROJECT_NAME} SDL2::SDL2main SDL2::SDL2)

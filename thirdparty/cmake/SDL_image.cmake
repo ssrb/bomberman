@@ -42,12 +42,14 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_GIF)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_JPG)
 if (WIN32)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_JPG_DYNAMIC="libjpeg-9.dll")
+	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libjpeg-9.dll" DESTINATION bin)
 endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_LBM)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_PCX)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_PNG)
 if (WIN32)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_PNG_DYNAMIC="libpng16-16.dll")
+	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libpng16-16.dll" DESTINATION bin)
 endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_PNM)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_SVG)
@@ -55,10 +57,12 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_TGA)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_TIF)
 if (WIN32)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_TIF_DYNAMIC="libtiff-5.dll")
+	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libtiff-5.dll" DESTINATION bin)
 endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_WEBP)
 if (WIN32)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_WEBP_DYNAMIC="libwebp-7.dll")
+	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libwebp-7.dll" DESTINATION bin)
 endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_XPM)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_XV)
@@ -77,3 +81,26 @@ set (showimage_SOURCES
 
 add_executable(showimage ${showimage_SOURCES})
 target_link_libraries(showimage PRIVATE ${PROJECT_NAME} SDL2::SDL2main SDL2::SDL2)
+
+#include(CMakePackageConfigHelpers)
+#
+#configure_package_config_file(
+#    cmake-src/8iturbovideo-config.cmake.in
+#    ${CMAKE_CURRENT_BINARY_DIR}/8iturbovideo-config-tmp
+#    INSTALL_DESTINATION ${TURBOVIDEO_CONFIG_INSTALL_DIR}
+#    PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR
+#    )
+#
+#write_basic_package_version_file(
+#    ${CMAKE_CURRENT_BINARY_DIR}/8iturbovideo-config-version.cmake
+#    VERSION ${PROJECT_VERSION}
+#    COMPATIBILITY SameMajorVersion
+#    )
+
+install(FILES ${SDL_image_PUBLIC_HEADERS} DESTINATION include)
+install(TARGETS ${PROJECT_NAME}
+	    EXPORT  SDL_image-targets
+	    RUNTIME DESTINATION bin
+	    LIBRARY DESTINATION lib
+	    ARCHIVE DESTINATION lib
+	)

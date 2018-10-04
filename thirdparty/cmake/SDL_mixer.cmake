@@ -84,18 +84,22 @@ endif()
 if (MUSIC_FLAC)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_FLAC)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE FLAC_DYNAMIC="libFLAC-8.dll")
+	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libFLAC-8.dll" DESTINATION bin)
 endif()
 if (MUSIC_OGG)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_OGG)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE OGG_DYNAMIC="libvorbisfile-3.dll")
+	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libvorbisfile-3.dll" DESTINATION bin)
 endif()
 if (MUSIC_OPUS)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_OPUS)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE OPUS_DYNAMIC="libopusfile-0.dll")
+	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libopusfile-0.dll" DESTINATION bin)
 endif()
 if (MUSIC_MP3_MPG123)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MP3_MPG123)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MPG123_DYNAMIC="libmpg123-0.dll")
+	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libmpg123-0.dll" DESTINATION bin)
 endif()
 if (MUSIC_MP3_MAD)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MP3_MAD)
@@ -106,6 +110,7 @@ endif()
 if (MUSIC_MOD_MODPLUG)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MOD_MODPLUG)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MODPLUG_DYNAMIC="libmodplug-1.dll")
+	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libmodplug-1.dll" DESTINATION bin)
 endif()
 if (MUSIC_MOD_MIKMOD)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MOD_MIKMOD)
@@ -200,4 +205,25 @@ set (playwave_SOURCES
 add_executable(playwave ${playwave_SOURCES})
 target_link_libraries(playwave PRIVATE SDL2::SDL2main SDL2::SDL2 ${PROJECT_NAME})
 
+#include(CMakePackageConfigHelpers)
+#
+#configure_package_config_file(
+#    cmake-src/8iturbovideo-config.cmake.in
+#    ${CMAKE_CURRENT_BINARY_DIR}/8iturbovideo-config-tmp
+#    INSTALL_DESTINATION ${TURBOVIDEO_CONFIG_INSTALL_DIR}
+#    PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR
+#    )
+#
+#write_basic_package_version_file(
+#    ${CMAKE_CURRENT_BINARY_DIR}/8iturbovideo-config-version.cmake
+#    VERSION ${PROJECT_VERSION}
+#    COMPATIBILITY SameMajorVersion
+#    )
 
+install(FILES ${SDL_mixer_PUBLIC_HEADERS} DESTINATION include)
+install(TARGETS ${PROJECT_NAME}
+	    EXPORT  SDL_mixer-targets
+	    RUNTIME DESTINATION bin
+	    LIBRARY DESTINATION lib
+	    ARCHIVE DESTINATION lib
+	)

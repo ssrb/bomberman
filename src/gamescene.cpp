@@ -15,12 +15,10 @@
 #include "resourcemanager.hpp"
 
 #include <iomanip>
+#include <sstream>
 
 //SDL
 #include <SDL_image.h>
-
-//Boost
-#include <boost/foreach.hpp>
 
 using bomberman::bestiary::Player;
 using bomberman::bestiary::PlayerPtr;
@@ -180,7 +178,7 @@ void GameScene::Update(const std::vector<InputState>& inputs, uint32_t now)
 		return left->elevel < right->elevel;
 	});
 
-	BOOST_FOREACH (auto entity, entities) 
+	for (auto entity : entities) 
 	{
 		entity->Evolve(inputs, now, _presentMap, futurMap);
 	}
@@ -189,7 +187,7 @@ void GameScene::Update(const std::vector<InputState>& inputs, uint32_t now)
 
 	futurMap->ForeachTile([&](int x, int y, const EntitySet &iEntities)
 	{	
-		BOOST_FOREACH (auto entity, iEntities) 
+		for (auto entity : iEntities) 
 		{
 			entity->Interact(inputs, now, iEntities);
 		}
@@ -256,7 +254,7 @@ void GameScene::Render(SDL_Renderer *renderer)
 				: 	left->zlevel < right->zlevel;
 	});
 
-	BOOST_FOREACH (auto entity, entities) 
+	for (auto entity : entities) 
 	{
 		if (entity->active)
 		{

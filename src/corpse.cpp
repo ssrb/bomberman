@@ -9,7 +9,6 @@
 // SDL
 #include <SDL.h>
 #include <SDL_image.h>
-#include <boost/foreach.hpp>
 
 using bomberman::arsenal::Bomb;
 using bomberman::architecture::Block;

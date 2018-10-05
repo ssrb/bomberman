@@ -15,7 +15,6 @@
 // SDL
 #include <SDL.h>
 #include <SDL_image.h>
-#include <boost/foreach.hpp>
 
 using bomberman::arsenal::Bomb;
 using bomberman::arsenal::PropBomb;
@@ -107,7 +106,7 @@ namespace bestiary {
 			// make sure there isn't already a bomb there
 			bool alreadyBombed = false;
 			
-			BOOST_FOREACH(auto entity, iPresentMap->GetEntities(player->GetX(), player->GetY()))
+			for(auto entity : iPresentMap->GetEntities(player->GetX(), player->GetY()))
 			{
 				if (typeid(*entity) == typeid(Bomb))
 				{
@@ -242,7 +241,7 @@ namespace bestiary {
                     return false;
                 }
                 
-                BOOST_FOREACH(auto ntt, iPresentMap->GetEntities(xx, yy))
+                for(auto ntt : iPresentMap->GetEntities(xx, yy))
                 {
                     if (
                         typeid(*ntt) != typeid(architecture::FloorTile) &&
@@ -289,7 +288,7 @@ namespace bestiary {
 
 	void Player::Interact(const std::vector<InputState>& , Uint32 , const EntitySet &iOthers)
 	{
-		BOOST_FOREACH (auto other, iOthers)
+		for (auto other : iOthers)
 		{
 			if(typeid(*other) == typeid(Bonus))
 			{

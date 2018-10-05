@@ -14,7 +14,6 @@
 #include <array>
 #include <map>
 
-#include <boost/circular_buffer.hpp>
 #include "player.hpp"
 
 namespace bomberman {
@@ -48,7 +47,7 @@ class GameScene : public SceneInterface
 		MapPtr _presentMap;
 
 		PlayerConfigArray _playerConfig;
-		boost::circular_buffer<std::pair<uint32_t, MapPtr>> _pastMaps;
+		std::list<std::pair<uint32_t, MapPtr>> _pastMaps;
 
 		bool _running;
 		int _victor;

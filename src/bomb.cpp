@@ -8,7 +8,6 @@
 #include "umpire.hpp"
 #include "resourcemanager.hpp"
 
-#include <boost/foreach.hpp>
 #include <SDL_image.h>
 
 using bomberman::architecture::Block;

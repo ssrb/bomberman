@@ -1,4 +1,5 @@
 #include "fadescene.hpp"
+#include <algorithm>
 
 namespace bomberman {
 

@@ -5,10 +5,8 @@
 // STL - libstdc++
 #include <map>
 #include <memory>
+#include <functional>
 #include <unordered_set>
-
-// boost
-#include <boost/multi_array.hpp>
 
 namespace bomberman {
 
@@ -63,7 +61,7 @@ class Map
 	private:
 		std::map<EntityID, EntityConstPtr> _entityIndex;
 		int _width, _height;
-		typedef boost::multi_array<EntitySet, 2> map_type;
+		typedef EntitySet* map_type;
 		map_type _map;
         EntityPtr _umpire;
 };

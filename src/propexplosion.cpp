@@ -11,7 +11,6 @@
 
 // SDL
 #include <SDL_image.h>
-#include <boost/foreach.hpp>
 
 using bomberman::architecture::Block;
 using bomberman::architecture::SoftBlock;
@@ -30,7 +29,7 @@ namespace arsenal {
 				return false;
 			}
 
-			BOOST_FOREACH (auto entity, iMap->GetEntities(x, y)) 
+			for (auto entity : iMap->GetEntities(x, y)) 
 			{
 				if (typeid(*entity) == typeid(Block))
 				{
@@ -96,7 +95,7 @@ namespace arsenal {
 		using bomberman::bestiary::Player;
 		using bomberman::bestiary::Computer;
 
-		BOOST_FOREACH (auto other, iOthers)
+		for (auto other : iOthers)
 		{
 			if(typeid(*other) == typeid(PropBomb))
 			{

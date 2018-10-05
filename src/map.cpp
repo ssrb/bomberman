@@ -9,7 +9,6 @@
 #include "umpire.hpp"
 
 #include <iostream>
-#include <boost/foreach.hpp>
 
 namespace bomberman {
 
@@ -17,7 +16,8 @@ namespace bomberman {
 Map::Map(int w, int h) : 
 	_width(w),
 	_height(h),
-	_map(boost::extents[_width][_height])
+	// _map(boost::extents[_width][_height])
+	_map(new EntitySet[_width * _height])
 {
 }
     
@@ -26,7 +26,7 @@ Map::PositionCheck Map::CheckPosition(int x, int y) const
 {
 	if (x >= 0 && x < _width && y >= 0 && y < _height)
 	{
-		BOOST_FOREACH(auto ntt, GetEntities(x, y))
+		for (auto ntt : GetEntities(x, y))
 		{
 			if (
 				typeid(*ntt) != typeid(architecture::FloorTile) &&
@@ -56,12 +56,12 @@ Map::PositionCheck Map::CheckPosition(int x, int y) const
 
 const EntitySet &Map::GetEntities(int x, int y) const
 {
-	return _map[x][y];
+	return _map[y * _width + x];
 }
 
 EntitySet &Map::GetEntities(int x, int y)
 {
-	return _map[x][y];
+	return _map[y * _width + x];
 }
 
 bool Map::SetEntity(const EntityPtr &ntt)
@@ -79,7 +79,7 @@ bool Map::SetEntity(const EntityPtr &ntt)
 		return false;
 	}
 	
-	_map[x][y].insert(ntt);
+	GetEntities(x, y).insert(ntt);
 
 	if (ntt->id)
 	{
@@ -113,7 +113,7 @@ void Map::ForeachTile(std::function<void(int, int, const EntitySet &)> func) con
 	{
 		for (int y = 0; y < _height; y++)
 		{
-			func(x, y, _map[x][y]);
+			func(x, y, GetEntities(x, y));
 		}
 	}
 }
@@ -122,7 +122,7 @@ void Map::ForeachEntity(std::function<void(const EntityConstPtr &)> func) const
 {
 	ForeachTile([&](int, int, const EntitySet &entities)
 	{
-		BOOST_FOREACH (auto entity, entities)
+		for (auto entity : entities)
 		{
 			func(entity);
 		}
@@ -133,7 +133,7 @@ void Map::ForeachEntity(std::function<void(const EntityPtr &)> func)
 {
 	ForeachTile([&](int, int, const EntitySet &entities)
 	{
-		BOOST_FOREACH (auto entity, entities)
+		for (auto entity : entities)
 		{
 			func(entity);
 		}

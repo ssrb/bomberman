@@ -4,11 +4,6 @@
 
 #include <map>
 #include <memory>
-#include <boost/foreach.hpp>
-
-#ifdef PROGRAM_OPTIONS
-#include <boost/program_options.hpp>
-#endif // PROGRAM_OPTIONS
 
 #include "inputstate.hpp"
 #include "constants_resolution.hpp"
@@ -25,30 +20,9 @@ using bomberman::resources::ResourceManager;
 
 void PollEvents(std::vector<InputState> &oInputState);
 
-#ifdef ANDROID
-#include <jni.h>
-
-extern "C" void Java_net_tenforward_bomberman_BombermanSurface_onOuyaControllerKey(
-                                                               JNIEnv* env, jclass jcls,
-                                                               jint player, jint keyCode, jint action)
-{
-    printlog("onOuyaControllerKey player=%d, keyCode=%d, action=%d", player, keyCode, action);
-    SDL_Event event;
-    memset(&event, sizeof(event), 0);
-    event.jdevice.which = player;
-    event.key.keysym.sym = keyCode;
- 	event.key.type = action ? SDL_KEYUP : SDL_KEYDOWN;
-   	SDL_PushEvent(&event);
-}
-#endif
-
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
 static std::map<int, InputState::Key> keyMap;
-
-#ifdef PROGRAM_OPTIONS
-static boost::program_options::variables_map vm;
-#endif // PROGRAM_OPTIONS
 
 void run(std::shared_ptr<bomberman::SceneInterface> scene)
 {
@@ -88,11 +62,7 @@ void PollEvents(std::vector<InputState> &oInputState)
 
 	while ( SDL_PollEvent(&e) )
 	{
-#ifdef ANDROID
-		auto inputState = &oInputState[e.jdevice.which];
-#else
 		auto inputState = &oInputState[0];
-#endif
 		
 		if (e.type == SDL_QUIT)
 		{
@@ -189,128 +159,17 @@ void game()
 		std::shared_ptr<bomberman::GameScene> ts(new bomberman::GameScene(players));
 		std::shared_ptr<bomberman::FadeScene> cover(new bomberman::FadeScene(ts));
         
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-        std::shared_ptr<bomberman::TouchScreenKeyScene> coverTS(new bomberman::TouchScreenKeyScene(cover));
-        run(coverTS);
-#else
 		run(cover);
-#endif
         
 		std::shared_ptr<bomberman::VictoryScene> vs(new bomberman::VictoryScene(ts->GetVictor()));
 		std::shared_ptr<bomberman::FadeScene> fs(new bomberman::FadeScene(vs));
         
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-        std::shared_ptr<bomberman::TouchScreenKeyScene> vicTS(new bomberman::TouchScreenKeyScene(fs));
-        run(vicTS);
-#else
 		run(fs);
-#endif
-        
-
     }
-    
-#ifdef PROGRAM_OPTIONS
-	// This is the game's options harness. We perform game testing here without having to go through
-	// the menus which are tedious
-	if (!vm.empty())
-	{
-		bomberman::PlayerConfigArray players;
-
-		int p1 = vm.count("p1");
-		int p2 = vm.count("p2");
-		int p3 = vm.count("p3");
-		int p4 = vm.count("p4");
-
-		players[0].name = "Athos";
-		players[0].spriteName = "drawable/SaturnBomberman-BlackBomberman.PNG";
-		players[0].present = p1 ? true : false;
-		players[0].isComputer = p1 ? true : false;
-		players[0].aiScript =  p1 ? vm["p1"].as<std::string>() : "";
-
-		players[1].name = "Porthos";
-		players[1].spriteName = "drawable/honey.png";
-		players[1].present = p2 ? true : false;
-		players[1].isComputer = p2 ? true : false;
-		players[1].aiScript = p2 ? vm["p2"].as<std::string>() : "";
-
-		players[2].name = "Aramis";
-		players[2].spriteName = "drawable/manji.png";
-		players[2].present = p3 ? true : false;
-		players[2].isComputer = p3 ? true : false;
-		players[2].aiScript = p3 ? vm["p3"].as<std::string>() : "";
-
-		players[3].name = "D'Artagnan";
-		players[3].spriteName = "drawable/whitebbman.png";
-		players[3].present = p4 ? true : false;
-		players[3].isComputer = p4 ? true : false;
-		players[3].aiScript = p4 ? vm["p4"].as<std::string>() : "";
-		
-		for (int i=0;i<4;i++)
-		{
-			if(vm.count("human"))
-			{
-				int humanplayer = vm["human"].as<int>();
-				if(i+1 == humanplayer)
-				{
-					players[i].present = true;
-					players[i].isComputer = false;
-				}
-			}
-		}
-		
-		std::shared_ptr<bomberman::GameScene> ts(new bomberman::GameScene(players));
-		std::shared_ptr<bomberman::FadeScene> cover(new bomberman::FadeScene(ts));
-		run(cover);
-			
-		std::shared_ptr<bomberman::VictoryScene> vs(new bomberman::VictoryScene(ts->GetVictor()));
-		std::shared_ptr<bomberman::FadeScene> fs(new bomberman::FadeScene(vs));
-		run(fs);
-		return;
-	}
-#endif // PROGRAM_OPTIONS
 }
 
 int main(int argc, char** argv)
 {
-#ifdef PROGRAM_OPTIONS
-	namespace po = boost::program_options;
-
-	po::options_description desc("Allowed options");
-	desc.add_options()
-		("help", "Produce this help message")
-		("human", po::value<int>(), "Human player number (1-4)")
-		("p1", po::value<std::string>(), "Player 1 AI Script")
-		("p2", po::value<std::string>(), "Player 2 AI Script")
-		("p3", po::value<std::string>(), "Player 3 AI Script")
-		("p4", po::value<std::string>(), "Player 4 AI Script");
-	
-	po::store(po::parse_command_line(argc, argv, desc), vm);
-	po::notify(vm);
-
-	if (vm.count("help"))
-	{
-		std::stringstream ss;
-		ss << desc << std::endl;
-		printlog("%s\n", ss.str().c_str());
-		return 0;
-	}
-#endif // PROGRAM_OPTIONS
-
-#ifdef ANDROID
-	keyMap[ouya::UP] = InputState::UP;
-	keyMap[ouya::DOWN] = InputState::DOWN;
-	keyMap[ouya::LEFT] = InputState::LEFT;
-	keyMap[ouya::RIGHT] = InputState::RIGHT;
-	keyMap[ouya::A] = InputState::A;
-	keyMap[ouya::O] = InputState::B;
-	keyMap[ouya::U] = InputState::X;
-	keyMap[ouya::Y] = InputState::Y;
-	keyMap[ouya::L1] = InputState::L1;
-	keyMap[ouya::L2] = InputState::L2;
-	keyMap[ouya::R1] = InputState::R1;
-	keyMap[ouya::R2] = InputState::R2;
-	keyMap[ouya::OUYABUTTON] = InputState::START;
-#else
 	keyMap[SDLK_UP] = InputState::UP;
 	keyMap[SDLK_DOWN] = InputState::DOWN;
 	keyMap[SDLK_LEFT] = InputState::LEFT;
@@ -328,7 +187,6 @@ int main(int argc, char** argv)
 	keyMap[SDLK_l] = InputState::R1;
 	keyMap[SDLK_m] = InputState::R2;
 	keyMap[SDLK_SPACE] = InputState::START;
-#endif
 
 	SDL_Init(SDL_INIT_EVERYTHING);   // Initialize SDL2
 	Mix_Init(MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG);

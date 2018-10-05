@@ -13,16 +13,16 @@ set (SDL_ttf_PUBLIC_HEADERS
     "SDL_ttf.h"
 )
 
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_SOURCE_DIR}/../build/cmake")
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${PROJECT_SOURCE_DIR}/../build/cmake")
 find_package(SDL2 REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED ${SDL_ttf_SOURCES} ${SDL_ttf_PRIVATE_HEADERS} ${SDL_ttf_PUBLIC_HEADERS})
 
 if (WIN32)
-	target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/VisualC/external/include")
-	target_link_libraries(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libfreetype-6.lib")
-	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/libfreetype-6.dll" DESTINATION bin)
-	install(FILES "${CMAKE_SOURCE_DIR}/VisualC/external/lib/x64/zlib1.dll" DESTINATION bin)
+	target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/VisualC/external/include")
+	target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libfreetype-6.lib")
+	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libfreetype-6.dll" DESTINATION bin)
+	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/zlib1.dll" DESTINATION bin)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)

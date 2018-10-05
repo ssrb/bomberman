@@ -10,9 +10,6 @@
 [submodule "thirdparty/SDL_ttf"]
 	path = thirdparty/SDL_ttf
 	url = https://github.com/SDL-mirror/SDL_ttf.git
-[submodule "thirdparty/boost"]
-	path = thirdparty/boost
-	url = https://github.com/davidsiaw/boost
 [submodule "thirdparty/luacppinterface"]
 	path = thirdparty/luacppinterface
 	url = https://github.com/davidsiaw/luacppinterface

@@ -3,8 +3,6 @@
 
 #include "scene_interface.hpp"
 
-#include <boost/tr1/memory.hpp>
-
 #include <forward_list>
 
 // Scene that displays a dialog

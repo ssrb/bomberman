@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 
 project(Bomberman VERSION 1.0.0.0 LANGUAGES CXX)
 
+option(SMALL_SCREEN "Small screen support" ON)
+
 set (BOMBERMAN_SOURCES
     "src/block.cpp"
     "src/bomb.cpp"
@@ -65,7 +67,6 @@ set (BOMBERMAN_PRIVATE_HEADERS
     "src/softblock.hpp"
 )
 
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 if (WIN32)
     set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${PROJECT_SOURCE_DIR}/thirdparty/build/cmake")
@@ -80,6 +81,11 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/thirdparty/SDL_ttf")
 
 add_executable(${PROJECT_NAME} ${BOMBERMAN_SOURCES} ${BOMBERMAN_PRIVATE_HEADERS})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+
+if (SMALL_SCREEN)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE SMALL_SCREEN)
+endif()
+
 target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface/LuaCppInterface")
 target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface/lua/src")
 

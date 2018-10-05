@@ -19,7 +19,8 @@ set (SDL_image_SOURCES
     "IMG_tga.c"
     "IMG_webp.c"
     "IMG_xcf.c"
-    "IMG_xv.c" )
+    "IMG_xv.c" 
+)
 
 set (SDL_image_PRIVATE_HEADERS
     "miniz.h"
@@ -33,7 +34,6 @@ set (SDL_image_PUBLIC_HEADERS
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${PROJECT_SOURCE_DIR}/../build/cmake")
 find_package(SDL2 REQUIRED)
-
 
 add_library(${PROJECT_NAME} SHARED ${SDL_image_SOURCES} ${SDL_image_PRIVATE_HEADERS} ${SDL_image_PUBLIC_HEADERS})
 
@@ -50,6 +50,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_PNG)
 if (WIN32)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_PNG_DYNAMIC="libpng16-16.dll")
 	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libpng16-16.dll" DESTINATION bin)
+	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/zlib1.dll" DESTINATION bin)
 endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_PNM)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_SVG)
@@ -68,7 +69,6 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_XPM)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_XV)
 target_compile_definitions(${PROJECT_NAME} PRIVATE PNG_USE_DLL)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ZLIB_DLL)
-
 if (WIN32)
 	target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/VisualC/external/include")
 endif()
@@ -103,4 +103,4 @@ install(TARGETS ${PROJECT_NAME}
 	    RUNTIME DESTINATION bin
 	    LIBRARY DESTINATION lib
 	    ARCHIVE DESTINATION lib
-	)
+)

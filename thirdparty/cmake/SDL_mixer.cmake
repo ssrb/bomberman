@@ -67,7 +67,7 @@ set (SDL_mixer_PUBLIC_HEADERS
 )
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${PROJECT_SOURCE_DIR}/../build/cmake")
-find_package(SDL2 REQUIRED)
+#find_package(SDL2 REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED ${SDL_mixer_SOURCES} ${SDL_mixer_PRIVATE_HEADERS} ${SDL_mixer_PUBLIC_HEADERS})
 
@@ -150,7 +150,8 @@ if (MUSIC_MID_TIMIDITY)
 	)
 
 	add_library(timidity STATIC ${timidity_SOURCES} ${timidity_PRIVATE_HEADERS} ${timidity_PUBLIC_HEADERS})
-	target_link_libraries(timidity PRIVATE SDL2::SDL2)
+	target_include_directories(timidity PRIVATE "${SDL2_SOURCE_DIR}/include")
+	target_link_libraries(timidity PRIVATE SDL2)
 
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MID_TIMIDITY)
 	target_link_libraries(${PROJECT_NAME} PRIVATE timidity)
@@ -182,43 +183,32 @@ if (MUSIC_MID_NATIVE)
 	)
 
 	add_library(native_midi STATIC ${native_midi_SOURCES} ${native_midi_PRIVATE_HEADERS} ${native_midi_PUBLIC_HEADERS})
-	target_link_libraries(native_midi PRIVATE SDL2::SDL2)
+	target_include_directories(native_midi PRIVATE "${SDL2_SOURCE_DIR}/include")
+	target_link_libraries(native_midi PRIVATE SDL2)
 
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MID_NATIVE)
+	target_include_directories(${PROJECT_NAME} PRIVATE "${SDL2_SOURCE_DIR}/include")
 	target_link_libraries(${PROJECT_NAME} PRIVATE native_midi)
 
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
 
 set (playmus_SOURCES
 	"playmus.c"
 )
 
 add_executable(playmus ${playmus_SOURCES})
-target_link_libraries(playmus PRIVATE SDL2::SDL2main SDL2::SDL2 ${PROJECT_NAME})
+target_include_directories(playmus PRIVATE "${SDL2_SOURCE_DIR}/include")
+target_link_libraries(playmus PRIVATE SDL2main SDL2 ${PROJECT_NAME})
 
 set (playwave_SOURCES
 	"playwave.c"
 )
 
 add_executable(playwave ${playwave_SOURCES})
-target_link_libraries(playwave PRIVATE SDL2::SDL2main SDL2::SDL2 ${PROJECT_NAME})
-
-#include(CMakePackageConfigHelpers)
-#
-#configure_package_config_file(
-#    cmake-src/8iturbovideo-config.cmake.in
-#    ${CMAKE_CURRENT_BINARY_DIR}/8iturbovideo-config-tmp
-#    INSTALL_DESTINATION ${TURBOVIDEO_CONFIG_INSTALL_DIR}
-#    PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR
-#    )
-#
-#write_basic_package_version_file(
-#    ${CMAKE_CURRENT_BINARY_DIR}/8iturbovideo-config-version.cmake
-#    VERSION ${PROJECT_VERSION}
-#    COMPATIBILITY SameMajorVersion
-#    )
+target_include_directories(playwave PRIVATE "${SDL2_SOURCE_DIR}/include")
+target_link_libraries(playwave PRIVATE SDL2main SDL2 ${PROJECT_NAME})
 
 install(FILES ${SDL_mixer_PUBLIC_HEADERS} DESTINATION include)
 install(TARGETS ${PROJECT_NAME}

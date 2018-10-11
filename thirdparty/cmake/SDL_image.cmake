@@ -70,10 +70,65 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE LOAD_XV)
 target_compile_definitions(${PROJECT_NAME} PRIVATE PNG_USE_DLL)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ZLIB_DLL)
 if (WIN32)
-	target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/VisualC/external/include")
+    target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/VisualC/external/include")
+else()
+    target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/jpeg-9b")
+    target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/libpng-1.6.32")
+    target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/libwebp-0.6.0")
+    target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/zlib-1.2.11")
 endif()
 target_include_directories(${PROJECT_NAME} PRIVATE "${SDL2_SOURCE_DIR}/include")
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
+
+if (NOT WIN32)
+
+    include(ExternalProject)
+
+    ExternalProject_Add(tiff
+        SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/tiff-4.0.8"
+        CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/external/tiff-4.0.8/install"
+    )
+    add_dependencies(${PROJECT_NAME} tiff)
+    target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/tiff-4.0.8/install/include")
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/tiff-4.0.8/install/lib/libtiff.so")
+
+    ExternalProject_Add(webp
+        SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/libwebp-0.6.0"
+        #PATCH_COMMAND patch < "${PROJECT_SOURCE_DIR}/external/libwebp-0.6.0.patch"
+        CMAKE_ARGS "-DCMAKE_C_FLAGS=-fPIC"
+        INSTALL_COMMAND ""
+        BUILD_IN_SOURCE true
+    )
+    add_dependencies(${PROJECT_NAME} webp)
+    target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/libwebp-0.6.0/src")
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/libwebp-0.6.0/libwebp.a")
+
+    ExternalProject_Add(png
+        SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/libpng-1.6.32"
+        #PATCH_COMMAND patch < "${PROJECT_SOURCE_DIR}/external/libpng-1.6.32.patch"
+        CONFIGURE_COMMAND cmake . -DCMAKE_INSTALL_PREFIX=install
+        BUILD_COMMAND make
+        BUILD_IN_SOURCE true
+    )
+    add_dependencies(${PROJECT_NAME} png)
+    target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/libpng-1.6.32/install/include")
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/libpng-1.6.32/install/lib/libpng.so")
+
+    ExternalProject_Add(jpeg
+        SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/jpeg-9b"
+        #PATCH_COMMAND patch < "${PROJECT_SOURCE_DIR}/external/jpeg-9b.patch"
+        CONFIGURE_COMMAND 
+			"${PROJECT_SOURCE_DIR}/external/jpeg-9b/configure"
+			--prefix "${PROJECT_SOURCE_DIR}/external/jpeg-9b/install"
+        BUILD_COMMAND 
+			make
+		INSTALL_COMMAND 
+			make install
+    )
+    add_dependencies(${PROJECT_NAME} jpeg)
+    target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/jpeg-9b/install/include")
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/jpeg-9b/install/lib/libjpeg.so")
+
+endif()
 
 set (showimage_SOURCES
     "showimage.c"

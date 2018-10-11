@@ -14,7 +14,6 @@ set (SDL_ttf_PUBLIC_HEADERS
 )
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${PROJECT_SOURCE_DIR}/../build/cmake")
-#find_package(SDL2 REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED ${SDL_ttf_SOURCES} ${SDL_ttf_PRIVATE_HEADERS} ${SDL_ttf_PUBLIC_HEADERS})
 
@@ -30,9 +29,10 @@ else()
 
 	ExternalProject_Add(freetype
 		SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12"
+		PREFIX "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12"
 		CONFIGURE_COMMAND 
 			"${PROJECT_SOURCE_DIR}/external/freetype-2.4.12/configure"
-			--prefix "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12/build"
+			--prefix "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12/install"
 		BUILD_COMMAND 
 			make
 		INSTALL_COMMAND 
@@ -40,8 +40,9 @@ else()
 	)
 	
 	add_dependencies(${PROJECT_NAME} freetype)
-	target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12/include")
-	target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12/build/lib/libfreetype.so.6.10.1")
+	target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12/install/include")
+	target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12/install/include/freetype2")
+	target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12/install/lib/libfreetype.so.6.10.1")
 	install(FILES "${PROJECT_SOURCE_DIR}/external/freetype-2.4.12/objs/.libs/libfreetype.so.6.10.1" DESTINATION bin)
 
 endif()

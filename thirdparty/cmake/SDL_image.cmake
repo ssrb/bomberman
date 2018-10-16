@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 
 project(SDL_image VERSION 1.0.0.0 LANGUAGES C CXX)
 
+include(ExternalProject)
+
 set (SDL_image_SOURCES
     "IMG_bmp.c"
     "IMG_gif.c"
@@ -80,8 +82,6 @@ endif()
 target_include_directories(${PROJECT_NAME} PRIVATE "${SDL2_SOURCE_DIR}/include")
 
 if (NOT WIN32)
-
-    include(ExternalProject)
 
     ExternalProject_Add(tiff
         SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/tiff-4.0.8"

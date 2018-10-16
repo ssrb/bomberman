@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 
 project(SDL_mixer VERSION 1.0.0.0 LANGUAGES C CXX)
 
+include(ExternalProject)
+
 if (NOT WIN32)
 	option(MUSIC_CMD "Enable CMD support" OFF)
 endif()
@@ -87,9 +89,80 @@ if (MUSIC_FLAC)
 	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libFLAC-8.dll" DESTINATION bin)
 endif()
 if (MUSIC_OGG)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_OGG)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE OGG_DYNAMIC="libvorbisfile-3.dll")
-	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libvorbisfile-3.dll" DESTINATION bin)
+	if (WIN32)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_OGG)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE OGG_DYNAMIC="libvorbisfile-3.dll")
+		install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libvorbisfile-3.dll" DESTINATION bin)
+	else()
+
+		ExternalProject_Add(ogg
+			SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/libogg-1.3.2"
+			#PATCH_COMMAND patch < "${PROJECT_SOURCE_DIR}/external/libogg-1.3.2.patch"
+			CONFIGURE_COMMAND 
+				<SOURCE_DIR>/configure
+				--prefix=${PROJECT_SOURCE_DIR}/install
+			BUILD_COMMAND 
+				make
+			INSTALL_COMMAND 
+				make install
+		)
+		ExternalProject_Add_Step(ogg aclocal
+			COMMAND aclocal
+			WORKING_DIRECTORY <SOURCE_DIR>
+			DEPENDEES patch
+		)
+		ExternalProject_Add_Step(ogg automake
+			COMMAND automake
+			WORKING_DIRECTORY <SOURCE_DIR>
+			DEPENDEES aclocal
+		)
+		ExternalProject_Add_Step(ogg libtoolize
+			COMMAND libtoolize
+			DEPENDEES automake
+			WORKING_DIRECTORY <SOURCE_DIR>
+			DEPENDERS configure
+		)
+
+		ExternalProject_Add(vorbis
+			SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/libvorbis-1.3.5"
+			#PATCH_COMMAND patch < "${PROJECT_SOURCE_DIR}/external/libvorbis-1.3.5.patch"
+			CONFIGURE_COMMAND 
+				<SOURCE_DIR>/configure
+				--prefix=${PROJECT_SOURCE_DIR}/install
+				--with-ogg=${PROJECT_SOURCE_DIR}/install
+			BUILD_COMMAND 
+				make
+			INSTALL_COMMAND 
+				make install
+		)
+
+		ExternalProject_Add(vorbisidec
+			SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/libvorbisidec-1.2.1"
+			#PATCH_COMMAND patch < "${PROJECT_SOURCE_DIR}/external/libvorbisidec-1.2.1.patch"
+			CONFIGURE_COMMAND 
+				<SOURCE_DIR>/configure
+				--prefix=${PROJECT_SOURCE_DIR}/install
+				--with-ogg=${PROJECT_SOURCE_DIR}/install
+			BUILD_COMMAND 
+				make
+			INSTALL_COMMAND 
+				make install
+		)
+
+		ExternalProject_Add_Step(vorbisidec linkfix
+			COMMAND sed s/\@PACKAGE\@/libvorbisidec/g Version_script.in > <BINARY_DIR>/Version_script
+			WORKING_DIRECTORY <SOURCE_DIR>
+			DEPENDEES patch
+			DEPENDERS configure
+		)
+
+		add_dependencies(${PROJECT_NAME} ogg)
+		add_dependencies(vorbis ogg)
+		add_dependencies(vorbisidec vorbis)
+		add_dependencies(${PROJECT_NAME} vorbisidec)
+		target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/install/include")
+		#target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/install/lib/libmodplug.so")
+	endif()
 endif()
 if (MUSIC_OPUS)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_OPUS)
@@ -108,9 +181,26 @@ if (MUSIC_MP3_SMPEG)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MP3_SMPEG)
 endif()
 if (MUSIC_MOD_MODPLUG)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MOD_MODPLUG)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE MODPLUG_DYNAMIC="libmodplug-1.dll")
-	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libmodplug-1.dll" DESTINATION bin)
+	if (WIN32)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MOD_MODPLUG)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE MODPLUG_DYNAMIC="libmodplug-1.dll")
+		install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libmodplug-1.dll" DESTINATION bin)
+	else()
+		ExternalProject_Add(modplug
+			SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/libmodplug-0.8.9.0"
+			#PATCH_COMMAND patch < "${PROJECT_SOURCE_DIR}/external/libmodplug-0.8.9.0.patch"
+			CONFIGURE_COMMAND 
+				<SOURCE_DIR>/configure
+				--prefix=${PROJECT_SOURCE_DIR}/install
+			BUILD_COMMAND 
+				make
+			INSTALL_COMMAND 
+				make install
+		)
+		add_dependencies(${PROJECT_NAME} modplug)
+		target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/install/include")
+		target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/install/lib/libmodplug.so")
+	endif()
 endif()
 if (MUSIC_MOD_MIKMOD)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MOD_MIKMOD)

@@ -12,9 +12,9 @@ before_install:
 before_script:
   - gem install travis-artifacts
 script:
-  - ln -s thirdparty/cmake/SDL_image.cmake thirdparty/SDL_image/CMakeLists.txt
-  - ln -s thirdparty/cmake/SDL_mixer.cmake thirdparty/SDL_mixer/CMakeLists.txt
-  - ln -s thirdparty/cmake/SDL_ttf.cmake thirdparty/SDL_ttf/CMakeLists.txt
+  - cp thirdparty/cmake/SDL_image.cmake thirdparty/SDL_image/CMakeLists.txt
+  - cp thirdparty/cmake/SDL_mixer.cmake thirdparty/SDL_mixer/CMakeLists.txt
+  - cp thirdparty/cmake/SDL_ttf.cmake thirdparty/SDL_ttf/CMakeLists.txt
   - mkdir build-linux
   - cd  build-linux
   - cmake ..

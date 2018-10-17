@@ -80,6 +80,7 @@ else()
     target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/external/zlib-1.2.11")
 endif()
 target_include_directories(${PROJECT_NAME} PRIVATE "${SDL2_SOURCE_DIR}/include")
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
 
 if (NOT WIN32)
 

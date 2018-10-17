@@ -12,30 +12,12 @@ before_install:
 before_script:
   - gem install travis-artifacts
 script:
-  - pushd thirdparty/SDL
-  - mkdir build
-  - cd build
-  - cmake -DCMAKE_INSTALL_PREFIX:PATH=../../build ..
+  - ln -s thirdparty/cmake/SDL_image.cmake thirdparty/SDL_image/CMakeLists.txt
+  - ln -s thirdparty/cmake/SDL_mixer.cmake thirdparty/SDL_mixer/CMakeLists.txt
+  - ln -s thirdparty/cmake/SDL_ttf.cmake thirdparty/SDL_ttf/CMakeLists.txt
+  - mkdir build-linux
+  - cd  build-linux
+  - cmake ..
   - make -j 4 all install
-  - popd
-  - pushd thirdparty/SDL_image
-  - ./autogen.sh
-  - CPPFLAGS=-I${TRAVIS_BUILD_DIR}/thirdparty/build/include/SDL2 LDFLAGS=-L${TRAVIS_BUILD_DIR}/thirdparty/build/lib ./configure --prefix ${TRAVIS_BUILD_DIR}/thirdparty/build
-  - make -j 4 all install
-  - popd
-  - pushd thirdparty/SDL_mixer
-  - cp ../cmake/SDL_mixer.cmake CMakeList.txt
-  - mkdir build
-  - cd build
-  - cmake -DCMAKE_INSTALL_PREFIX:PATH=../../build ..
-  - make -j 4 all install
-  - popd
-  - pushd thirdparty/SDL_ttf
-  - cp ../cmake/SDL_ttf.cmake CMakeList.txt
-  - mkdir build
-  - cd build
-  - cmake -DCMAKE_INSTALL_PREFIX:PATH=../../build ..
-  - make -j 4 all install
-  - popd
 #after_success:
 #  - if [ $TRAVIS_REPO_SLUG = ssrb/bomberman ] && [ $THE_MAKEFILE = Makefile.android ]; then travis-artifacts upload --path bin/Bomberman-debug.apk; fi

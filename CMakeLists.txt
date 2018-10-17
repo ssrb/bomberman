@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 
 project(Bomberman VERSION 1.0.0.0 LANGUAGES CXX)
 
+include(ExternalProject)
+
 option(SMALL_SCREEN "Small screen support" ON)
 
 set (BOMBERMAN_SOURCES
@@ -98,8 +100,34 @@ target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main SDL2)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL_image)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL_mixer)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL_ttf)
-target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface/x64/Release/LuaCppInterface.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface/x64/Release/LuaLib.lib")
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface/x64/Release/LuaCppInterface.lib")
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface/x64/Release/LuaLib.lib")
+else()
+
+    ExternalProject_Add(luacppinterface
+        SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface"
+        CMAKE_ARGS "-DCMAKE_C_FLAGS=-fPIC"
+        INSTALL_COMMAND ""
+        BUILD_IN_SOURCE true
+    )
+
+    ExternalProject_Add(lua
+        SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface/lua"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND make linux
+        INSTALL_COMMAND ""
+        BUILD_IN_SOURCE true
+    )
+
+    add_dependencies(luacppinterface lua)
+    add_dependencies(${PROJECT_NAME} luacppinterface)
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface/libluacppinterface.a")
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/thirdparty/luacppinterface/lua/src/liblua.a")
+    target_link_libraries(${PROJECT_NAME} PRIVATE gcov)
+
+endif()
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/assets/aiscripts" DESTINATION bin)

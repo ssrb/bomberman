@@ -1,8 +1,10 @@
+sudo: required
+dist: xenial
 language: cpp
-rvm:  
-    - 2.0.0
-env:
-  global:
+compiler:
+-gcc
+#env:
+#  global:
 #    - ARTIFACTS_AWS_REGION=us-east-1
 #    - ARTIFACTS_S3_BUCKET=bomberman.ten-forward
 #  - secure: "e+lkwagu20aNVU86Rlwf4aJ7nZf1b0WT1s+HHdeWpyqM+O7Zu67z36q1BhgUunv56szVK2xXMU6K2I3KsXemCMO4/KA7usx/HM9uQ65tL6WwuppQYWqPzSiusljas15EpWQsIseNJ2Rjm8lBQY7MP3whurdXtqR8z5N6IxifEMU="
@@ -10,8 +12,8 @@ env:
 before_install:
   - sudo apt-get install autotools-dev automake libssl-dev libreadline-dev
   - git submodule update --init --recursive
-before_script:
-  - gem install travis-artifacts
+#before_script:
+#  - gem install travis-artifacts
 script:
   - cp thirdparty/cmake/SDL_image.cmake thirdparty/SDL_image/CMakeLists.txt
   - cp thirdparty/cmake/SDL_mixer.cmake thirdparty/SDL_mixer/CMakeLists.txt

@@ -84,9 +84,25 @@ if (MUSIC_WAV)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_WAV)
 endif()
 if (MUSIC_FLAC)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_FLAC)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE FLAC_DYNAMIC="libFLAC-8.dll")
-	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libFLAC-8.dll" DESTINATION bin)
+	if (WIN32)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_FLAC)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE FLAC_DYNAMIC="libFLAC-8.dll")
+		install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libFLAC-8.dll" DESTINATION bin)
+	else()
+		ExternalProject_Add(flac
+			SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/flac-1.3.2"
+			#PATCH_COMMAND patch < "${PROJECT_SOURCE_DIR}/external/flac-1.3.2.patch"
+			CONFIGURE_COMMAND 
+				<SOURCE_DIR>/configure
+				--prefix=${PROJECT_SOURCE_DIR}/install
+			BUILD_COMMAND 
+				make
+			INSTALL_COMMAND 
+				make install
+		)
+
+		add_dependencies(${PROJECT_NAME} flac)
+	endif()
 endif()
 if (MUSIC_OGG)
 	if (WIN32)
@@ -155,24 +171,68 @@ if (MUSIC_OGG)
 			DEPENDEES patch
 			DEPENDERS configure
 		)
-
-		add_dependencies(${PROJECT_NAME} ogg)
 		add_dependencies(vorbis ogg)
 		add_dependencies(vorbisidec vorbis)
 		add_dependencies(${PROJECT_NAME} vorbisidec)
 		target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/install/include")
-		#target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/install/lib/libmodplug.so")
 	endif()
 endif()
 if (MUSIC_OPUS)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_OPUS)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE OPUS_DYNAMIC="libopusfile-0.dll")
-	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libopusfile-0.dll" DESTINATION bin)
+	if (WIN32)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_OPUS)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE OPUS_DYNAMIC="libopusfile-0.dll")
+		install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libopusfile-0.dll" DESTINATION bin)
+	else()
+
+		ExternalProject_Add(opus
+			SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/opus-1.0.3"
+			CONFIGURE_COMMAND 
+				<SOURCE_DIR>/configure
+				--prefix=${PROJECT_SOURCE_DIR}/install
+			BUILD_COMMAND 
+				make
+			INSTALL_COMMAND 
+				make install
+		)
+
+		ExternalProject_Add(opusfile
+			SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/opusfile-0.10"
+			CONFIGURE_COMMAND 
+				env PKG_CONFIG_PATH=${PROJECT_SOURCE_DIR}/install/lib/pkgconfig:$PKG_CONFIG_PATH
+				<SOURCE_DIR>/configure
+				--prefix=${PROJECT_SOURCE_DIR}/install
+			BUILD_COMMAND 
+				make
+			INSTALL_COMMAND 
+				make install
+		)
+
+		add_dependencies(opusfile opus)
+		add_dependencies(opusfile ogg)
+		add_dependencies(${PROJECT_NAME} opusfile)
+		target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/install/include")
+	endif()
 endif()
 if (MUSIC_MP3_MPG123)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MP3_MPG123)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE MPG123_DYNAMIC="libmpg123-0.dll")
-	install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libmpg123-0.dll" DESTINATION bin)
+	if (WIN32)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MP3_MPG123)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE MPG123_DYNAMIC="libmpg123-0.dll")
+		install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libmpg123-0.dll" DESTINATION bin)
+	else()
+		ExternalProject_Add(mpg123
+			SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/mpg123-1.25.6"
+			#PATCH_COMMAND patch < "${PROJECT_SOURCE_DIR}/external/mpg123-1.25.6.patch"
+			CONFIGURE_COMMAND 
+				<SOURCE_DIR>/configure
+				--prefix=${PROJECT_SOURCE_DIR}/install
+			BUILD_COMMAND 
+				make
+			INSTALL_COMMAND 
+				make install
+		)
+		add_dependencies(${PROJECT_NAME} mpg123)
+		target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/install/include")
+	endif()
 endif()
 if (MUSIC_MP3_MAD)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MP3_MAD)
@@ -242,13 +302,13 @@ if (MUSIC_MID_TIMIDITY)
 	add_library(timidity STATIC ${timidity_SOURCES} ${timidity_PRIVATE_HEADERS} ${timidity_PUBLIC_HEADERS})
 	target_include_directories(timidity PRIVATE "${SDL2_SOURCE_DIR}/include")
 	target_link_libraries(timidity PRIVATE SDL2)
-
+	set_target_properties(timidity PROPERTIES POSITION_INDEPENDENT_CODE True)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MID_TIMIDITY)
 	target_link_libraries(${PROJECT_NAME} PRIVATE timidity)
 
 endif()
 
-if (MUSIC_MID_NATIVE)
+if (MUSIC_MID_NATIVE AND WIN32)
 
 	set (native_midi_SOURCES
 		"native_midi/native_midi_common.c"
@@ -275,13 +335,13 @@ if (MUSIC_MID_NATIVE)
 	add_library(native_midi STATIC ${native_midi_SOURCES} ${native_midi_PRIVATE_HEADERS} ${native_midi_PUBLIC_HEADERS})
 	target_include_directories(native_midi PRIVATE "${SDL2_SOURCE_DIR}/include")
 	target_link_libraries(native_midi PRIVATE SDL2)
-
-	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MID_NATIVE)
-	target_include_directories(${PROJECT_NAME} PRIVATE "${SDL2_SOURCE_DIR}/include")
+	set_target_properties(native_midi PROPERTIES POSITION_INDEPENDENT_CODE True)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_MID_NATIVE)	
 	target_link_libraries(${PROJECT_NAME} PRIVATE native_midi)
 
 endif()
 
+target_include_directories(${PROJECT_NAME} PRIVATE "${SDL2_SOURCE_DIR}/include")
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
 
 set (playmus_SOURCES

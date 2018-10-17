@@ -6,6 +6,7 @@
 
 #include <unordered_set>
 #include <memory>
+#include <vector>
 
 #include <SDL.h>
 class InputState;

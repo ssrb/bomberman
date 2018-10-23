@@ -25,11 +25,7 @@ void SetupScene::Init(SDL_Window* window, SDL_Renderer* renderer)
 	{
 		players[i].present = false;
 		players[i].isComputer = false;
-#ifdef ANDROID_TEST_SCRIPT
-		players[i].aiScript = "/sdcard/ai.lua";
-#else
 		players[i].aiScript = "aiscripts/example.lua";
-#endif // ANDROID_TEST_SCRIPT
 	}
 
 	players[0].name = "Athos";

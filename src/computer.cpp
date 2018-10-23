@@ -50,10 +50,6 @@ namespace bestiary {
 		player->_bomberman = ResourceManager::GetSingleton()->GetTexture(iSpriteName.c_str(), 0x00ff00);
         player->_bombPlaceSound = ResourceManager::GetSingleton()->GetMixChunk("sound/bombplace.wav");
 
-#ifndef ANDROID_TEST_SCRIPT
-		delete[] script;
-#endif
-
 		return player;
 	}
 

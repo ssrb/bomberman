@@ -88,6 +88,7 @@ if (MUSIC_FLAC)
 		target_compile_definitions(${PROJECT_NAME} PRIVATE MUSIC_FLAC)
 		target_compile_definitions(${PROJECT_NAME} PRIVATE FLAC_DYNAMIC="libFLAC-8.dll")
 		install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libFLAC-8.dll" DESTINATION bin)
+		install(FILES "${PROJECT_SOURCE_DIR}/VisualC/external/lib/x64/libogg-0.dll" DESTINATION bin)
 	else()
 		ExternalProject_Add(flac
 			SOURCE_DIR "${PROJECT_SOURCE_DIR}/external/flac-1.3.2"

@@ -38,7 +38,7 @@ GameScene::GameScene(const PlayerConfigArray &playerConfig) :
 	_music(Mix_LoadMUS("music/premonition.flac"), Mix_FreeMusic),
 	_presentMap(new Map(MAP_COLUMNS, MAP_ROWS)),
 	_playerConfig(playerConfig),
-	_pastMaps(10)
+	_pastMaps(4096)
     
 {
     
@@ -193,7 +193,7 @@ void GameScene::Update(const std::vector<InputState>& inputs, uint32_t now)
 		}
 	});
 
-	_pastMaps.push_front(std::make_pair(now, _presentMap));
+	_pastMaps.push(std::make_pair(now, _presentMap));
 	_presentMap = futurMap;
 
 	auto umpire = std::static_pointer_cast<Umpire>(_presentMap->GetEntity(constants::UMPIRE));
@@ -316,8 +316,7 @@ void GameScene::BackThroughTime()
 {
 	if (!_pastMaps.empty())
 	{
-		auto gameState = _pastMaps.front();
-		_pastMaps.pop_front();
+		auto gameState = _pastMaps.pop();
 		_presentMap = gameState.second;	
 	}
 }

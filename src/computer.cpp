@@ -10,17 +10,6 @@ namespace bestiary {
 
 	ComputerPtr Computer::Create(PlayerId id, const std::string &iName, const std::string &iSpriteName, const std::string &iAiScript, int iInputStateIdx, SDL_Renderer* iRenderer)
 	{
-#ifdef ANDROID_TEST_SCRIPT
-		std::ifstream in(iAiScript, std::ios::in | std::ios::binary);
-		std::string contents;
-		in.seekg(0, std::ios::end);
-		contents.resize(in.tellg());
-		in.seekg(0, std::ios::beg);
-		in.read(&contents[0], contents.size());
-		in.close();
-		std::string script = contents;
-
-#else 
 		SDL_RWops *rw = SDL_RWFromFile(iAiScript.c_str(), "r");
 
 		auto size = rw->size(rw);
@@ -28,8 +17,6 @@ namespace bestiary {
 		memset(script, 0, size + 1);
 		rw->read(rw, script, sizeof(char), size);
 		SDL_FreeRW(rw);
-
-#endif
 
 		std::shared_ptr<ScriptAPI> sa(new ScriptAPI(script));
 
